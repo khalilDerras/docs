@@ -32,190 +32,6 @@
         }
       }
     },
-    "/api/v1/payments": {
-      "post": {
-        "operationId": "PaymentController_createPaymentIntent",
-        "summary": "Create a payment intent",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePaymentIntentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Payment intent created successfully"
-          },
-          "400": {
-            "description": "Bad request - Invalid amount, currency or plan code"
-          },
-          "403": {
-            "description": "Forbidden - User not authorized to create payment intent"
-          },
-          "404": {
-            "description": "Not Found - Customer or plan not found"
-          }
-        },
-        "tags": [
-          "Payments"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/payments/callback": {
-      "get": {
-        "operationId": "PaymentController_handlePaymentCallback",
-        "summary": "Handle payment callback",
-        "parameters": [
-          {
-            "name": "redirect_status",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "payment_intent_client_secret",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "payment_intent",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "301": {
-            "description": "Redirect to payment callback return URL"
-          },
-          "400": {
-            "description": "Bad Request - Payment not completed successfully"
-          }
-        },
-        "tags": [
-          "Payments"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/payments/{clientSecret}": {
-      "get": {
-        "operationId": "PaymentController_retrievePaymentIntent",
-        "summary": "Retrieve payment intent",
-        "parameters": [
-          {
-            "name": "clientSecret",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Payment intent retrieved successfully"
-          },
-          "404": {
-            "description": "Payment intent not found"
-          },
-          "500": {
-            "description": "Internal Server Error - Failed to retrieve payment intent"
-          }
-        },
-        "tags": [
-          "Payments"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/customers/current-usage": {
-      "get": {
-        "operationId": "CustomerController_getCustomerCurrentUsage",
-        "summary": "Get customer current usage",
-        "description": "Retrieves the current usage for the authenticated customer",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Current usage retrieved successfully"
-          },
-          "403": {
-            "description": "Forbidden - Not authorized to access usage information"
-          },
-          "404": {
-            "description": "Not Found - Customer subscription not found"
-          }
-        },
-        "tags": [
-          "Customers"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/customers/{externalCustomerId}": {
-      "get": {
-        "operationId": "CustomerController_getCustomer",
-        "summary": "Get customer by external customer ID",
-        "description": "Retrieves customer information using their external ID (org ID)",
-        "parameters": [
-          {
-            "name": "externalCustomerId",
-            "required": true,
-            "in": "path",
-            "description": "External ID of the customer",
-            "example": "org1::user123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Customer found and retrieved successfully"
-          },
-          "404": {
-            "description": "Not Found - Customer not found"
-          }
-        },
-        "tags": [
-          "Customers"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
     "/api/v1/subscriptions": {
       "post": {
         "operationId": "SubscriptionController_create",
@@ -582,6 +398,429 @@
         },
         "tags": [
           "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/plans": {
+      "get": {
+        "operationId": "PlansController_findAll",
+        "summary": "Get all plans",
+        "parameters": [
+          {
+            "name": "accept-language",
+            "required": false,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all available plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Plan"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      },
+      "post": {
+        "operationId": "PlansController_create",
+        "summary": "Create a new plan",
+        "description": "Create a new plan with the provided details. Note: This endpoint is restricted for internal use only.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The plan has been successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePlanDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid plan data, unsupported currency, or duplicate plan code/amount"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      }
+    },
+    "/api/v1/plans/{code}": {
+      "get": {
+        "operationId": "PlansController_findOne",
+        "summary": "Get a specific plan by Code",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "The Code of the plan",
+            "example": "iqraa_starter_monthly",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": false,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      },
+      "delete": {
+        "operationId": "PlansController_delete",
+        "summary": "Delete a plan",
+        "description": "Delete a plan with the provided code.\n    \n    Note: This endpoint is restricted for internal use only.\n    Cannot delete plans with active subscriptions.",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "The Code of the plan to delete",
+            "example": "iqraa_starter_monthly",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The plan has been successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request - Cannot delete plan with active subscriptions"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      }
+    },
+    "/api/v1/plans/entitlement": {
+      "post": {
+        "operationId": "PlansController_addEntitlementToPlan",
+        "summary": "Add an entitlement to a plan",
+        "description": "Add an entitlement to a plan with the provided details. Note: This endpoint is restricted for internal use only.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddEntitlementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The entitlement has been successfully added to the plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AddEntitlementDtoEntry"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid entitlement data or duplicate entitlements"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Plan not found"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      }
+    },
+    "/api/v1/payments": {
+      "post": {
+        "operationId": "PaymentController_createPaymentIntent",
+        "summary": "Create a payment intent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentIntentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment intent created successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid amount, currency or plan code"
+          },
+          "403": {
+            "description": "Forbidden - User not authorized to create payment intent"
+          },
+          "404": {
+            "description": "Not Found - Customer or plan not found"
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/callback": {
+      "get": {
+        "operationId": "PaymentController_handlePaymentCallback",
+        "summary": "Handle payment callback",
+        "parameters": [
+          {
+            "name": "redirect_status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "payment_intent_client_secret",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "payment_intent",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "301": {
+            "description": "Redirect to payment callback return URL"
+          },
+          "400": {
+            "description": "Bad Request - Payment not completed successfully"
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/{clientSecret}": {
+      "get": {
+        "operationId": "PaymentController_retrievePaymentIntent",
+        "summary": "Retrieve payment intent",
+        "parameters": [
+          {
+            "name": "clientSecret",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment intent retrieved successfully"
+          },
+          "404": {
+            "description": "Payment intent not found"
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to retrieve payment intent"
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/current-usage": {
+      "get": {
+        "operationId": "CustomerController_getCustomerCurrentUsage",
+        "summary": "Get customer current usage",
+        "description": "Retrieves the current usage for the authenticated customer",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current usage retrieved successfully"
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to access usage information"
+          },
+          "404": {
+            "description": "Not Found - Customer subscription not found"
+          }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/{externalCustomerId}": {
+      "get": {
+        "operationId": "CustomerController_getCustomer",
+        "summary": "Get customer by external customer ID",
+        "description": "Retrieves customer information using their external ID (org ID)",
+        "parameters": [
+          {
+            "name": "externalCustomerId",
+            "required": true,
+            "in": "path",
+            "description": "External ID of the customer",
+            "example": "org1::user123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer found and retrieved successfully"
+          },
+          "404": {
+            "description": "Not Found - Customer not found"
+          }
+        },
+        "tags": [
+          "Customers"
         ],
         "security": [
           {
@@ -2113,245 +2352,6 @@
           {
             "bearer": []
           }
-        ]
-      }
-    },
-    "/api/v1/plans": {
-      "get": {
-        "operationId": "PlansController_findAll",
-        "summary": "Get all plans",
-        "parameters": [
-          {
-            "name": "accept-language",
-            "required": false,
-            "in": "header",
-            "description": "Language code for the requested translation",
-            "schema": {
-              "enum": [
-                "ar",
-                "en"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns all available plans",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plan"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          }
-        },
-        "tags": [
-          "Plans"
-        ]
-      },
-      "post": {
-        "operationId": "PlansController_create",
-        "summary": "Create a new plan",
-        "description": "Create a new plan with the provided details. Note: This endpoint is restricted for internal use only.",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePlanDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "The plan has been successfully created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatePlanDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Invalid plan data, unsupported currency, or duplicate plan code/amount"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          }
-        },
-        "tags": [
-          "Plans"
-        ]
-      }
-    },
-    "/api/v1/plans/{code}": {
-      "get": {
-        "operationId": "PlansController_findOne",
-        "summary": "Get a specific plan by Code",
-        "parameters": [
-          {
-            "name": "code",
-            "required": true,
-            "in": "path",
-            "description": "The Code of the plan",
-            "example": "iqraa_starter_monthly",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accept-language",
-            "required": false,
-            "in": "header",
-            "description": "Language code for the requested translation",
-            "schema": {
-              "enum": [
-                "ar",
-                "en"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the requested plan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plan"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Plan not found"
-          }
-        },
-        "tags": [
-          "Plans"
-        ]
-      },
-      "delete": {
-        "operationId": "PlansController_delete",
-        "summary": "Delete a plan",
-        "description": "Delete a plan with the provided code.\n    \n    Note: This endpoint is restricted for internal use only.\n    Cannot delete plans with active subscriptions.",
-        "parameters": [
-          {
-            "name": "code",
-            "required": true,
-            "in": "path",
-            "description": "The Code of the plan to delete",
-            "example": "iqraa_starter_monthly",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The plan has been successfully deleted"
-          },
-          "400": {
-            "description": "Bad Request - Cannot delete plan with active subscriptions"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Plan not found"
-          }
-        },
-        "tags": [
-          "Plans"
-        ]
-      }
-    },
-    "/api/v1/plans/entitlement": {
-      "post": {
-        "operationId": "PlansController_addEntitlementToPlan",
-        "summary": "Add an entitlement to a plan",
-        "description": "Add an entitlement to a plan with the provided details. Note: This endpoint is restricted for internal use only.",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddEntitlementDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "The entitlement has been successfully added to the plan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AddEntitlementDtoEntry"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Invalid entitlement data or duplicate entitlements"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Plan not found"
-          }
-        },
-        "tags": [
-          "Plans"
         ]
       }
     },
