@@ -32,238 +32,6 @@
         }
       }
     },
-    "/api/v1/notification-configs": {
-      "post": {
-        "operationId": "NotificationConfigController_create",
-        "summary": "Create a new notification config",
-        "description": "Create a new notification config with the provided details. Note: This endpoint is restricted for internal use only.",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateNotificationConfigDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Notification config created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Invalid notification config data"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          }
-        },
-        "tags": [
-          "Notification Configs"
-        ]
-      },
-      "get": {
-        "operationId": "NotificationConfigController_findAll",
-        "summary": "Get all notification configs",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns all notification configs",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CreateNotificationConfigDto"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          }
-        },
-        "tags": [
-          "Notification Configs"
-        ]
-      }
-    },
-    "/api/v1/notification-configs/{id}": {
-      "get": {
-        "operationId": "NotificationConfigController_findOne",
-        "summary": "Get notification config by ID",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "The ID of the notification config",
-            "example": "notification_config_123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the notification config",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Notification config not found"
-          }
-        },
-        "tags": [
-          "Notification Configs"
-        ]
-      },
-      "put": {
-        "operationId": "NotificationConfigController_update",
-        "summary": "Update notification config",
-        "description": "Updates a notification config with the provided details. Note: This endpoint is restricted for internal use only.",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "The ID of the notification config",
-            "example": "notification_config_123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateNotificationConfigDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Notification config updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Invalid notification config data"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Notification config not found"
-          }
-        },
-        "tags": [
-          "Notification Configs"
-        ]
-      },
-      "delete": {
-        "operationId": "NotificationConfigController_remove",
-        "summary": "Delete notification config",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "The ID of the notification config",
-            "example": "notification_config_123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Notification config deleted successfully"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Notification config not found"
-          }
-        },
-        "tags": [
-          "Notification Configs"
-        ]
-      }
-    },
     "/api/v1/payments": {
       "post": {
         "operationId": "PaymentController_createPaymentIntent",
@@ -928,318 +696,6 @@
         },
         "tags": [
           "Entitlements"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/billing-configs": {
-      "post": {
-        "operationId": "BillingConfigController_create",
-        "summary": "Create billing config",
-        "description": "Create a new billing config with the provided details. Note: This endpoint is restricted for internal use only.",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBillingConfigDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Billing config created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBillingConfigDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Billing config already exists or invalid data"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          }
-        },
-        "tags": [
-          "Billing Configs"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "BillingConfigController_findAll",
-        "summary": "Get all billing configs",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns all billing configs",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CreateBillingConfigDto"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          }
-        },
-        "tags": [
-          "Billing Configs"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/billing-configs/category/{category}": {
-      "get": {
-        "operationId": "BillingConfigController_findByCategory",
-        "summary": "Get billing config by category",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "category",
-            "required": true,
-            "in": "path",
-            "description": "The category of the billing config",
-            "example": "upgrade",
-            "schema": {
-              "enum": [
-                "upgrade",
-                "downgrade",
-                "billing",
-                "grace_period",
-                "terminate"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the billing config",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBillingConfigDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found - Billing config not found"
-          }
-        },
-        "tags": [
-          "Billing Configs"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/billing-configs/{id}": {
-      "get": {
-        "operationId": "BillingConfigController_findOne",
-        "summary": "Get billing config by ID",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "The id of the billing config",
-            "example": "billing_config_id",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the billing config",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBillingConfigDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Billing config not found"
-          }
-        },
-        "tags": [
-          "Billing Configs"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "put": {
-        "operationId": "BillingConfigController_update",
-        "summary": "Update billing config",
-        "description": "Updates a billing config with the provided details. Note: This endpoint is restricted for internal use only.",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateBillingConfigDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Billing config updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBillingConfigDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - Invalid billing config data"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Billing config not found"
-          }
-        },
-        "tags": [
-          "Billing Configs"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "BillingConfigController_remove",
-        "summary": "Delete billing config",
-        "parameters": [
-          {
-            "name": "x-admin-api-key",
-            "in": "header",
-            "description": "The API key to access the admin API",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "The id of the billing config",
-            "example": "billing_config_id",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Billing config deleted successfully"
-          },
-          "401": {
-            "description": "Unauthorized - Missing or invalid admin API key"
-          },
-          "404": {
-            "description": "Not Found - Billing config not found"
-          }
-        },
-        "tags": [
-          "Billing Configs"
         ],
         "security": [
           {
@@ -1928,47 +1384,6 @@
         },
         "tags": [
           "Invoice Templates"
-        ]
-      }
-    },
-    "/api/v1/translations/{key}": {
-      "get": {
-        "operationId": "TranslationsController_getTranslation",
-        "summary": "Get translation for a specific key",
-        "parameters": [
-          {
-            "name": "key",
-            "required": true,
-            "in": "path",
-            "description": "Translation key",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accept-language",
-            "required": true,
-            "in": "header",
-            "description": "Language code for the requested translation",
-            "schema": {
-              "enum": [
-                "ar",
-                "en"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Translation retrieved successfully"
-          },
-          "404": {
-            "description": "Translation not found"
-          }
-        },
-        "tags": [
-          "Translations"
         ]
       }
     },
@@ -2940,31 +2355,93 @@
         ]
       }
     },
-    "/api/v1/emails/send": {
+    "/api/v1/billing-configs": {
       "post": {
-        "operationId": "MailingController_sendEmail",
-        "summary": "Send an email",
-        "parameters": [],
+        "operationId": "BillingConfigController_create",
+        "summary": "Create billing config",
+        "description": "Create a new billing config with the provided details. Note: This endpoint is restricted for internal use only.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SendEmailDto"
+                "$ref": "#/components/schemas/CreateBillingConfigDto"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "The email has been successfully sent."
+            "description": "Billing config created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request."
+            "description": "Bad Request - Billing config already exists or invalid data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
-          "Emails"
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "BillingConfigController_findAll",
+        "summary": "Get all billing configs",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all billing configs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateBillingConfigDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          }
+        },
+        "tags": [
+          "Billing Configs"
         ],
         "security": [
           {
@@ -2973,37 +2450,220 @@
         ]
       }
     },
-    "/api/v1/webhooks/lago": {
-      "post": {
-        "operationId": "WebhooksController_handleLagoWebhook",
-        "summary": "Handle incoming Lago webhooks",
-        "parameters": [],
+    "/api/v1/billing-configs/category/{category}": {
+      "get": {
+        "operationId": "BillingConfigController_findByCategory",
+        "summary": "Get billing config by category",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": true,
+            "in": "path",
+            "description": "The category of the billing config",
+            "example": "upgrade",
+            "schema": {
+              "enum": [
+                "upgrade",
+                "downgrade",
+                "billing",
+                "grace_period",
+                "terminate"
+              ],
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Webhook processed successfully",
+            "description": "Returns the billing config",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Billing config not found"
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billing-configs/{id}": {
+      "get": {
+        "operationId": "BillingConfigController_findOne",
+        "summary": "Get billing config by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the billing config",
+            "example": "billing_config_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the billing config",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
                 }
               }
             }
           },
           "401": {
-            "description": "Invalid webhook signature"
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
-          "500": {
-            "description": "Failed to process webhook"
+          "404": {
+            "description": "Not Found - Billing config not found"
           }
         },
         "tags": [
-          "Webhooks"
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "BillingConfigController_update",
+        "summary": "Update billing config",
+        "description": "Updates a billing config with the provided details. Note: This endpoint is restricted for internal use only.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBillingConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Billing config updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid billing config data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Billing config not found"
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "BillingConfigController_remove",
+        "summary": "Delete billing config",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the billing config",
+            "example": "billing_config_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing config deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Billing config not found"
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
         ]
       }
     },
@@ -3252,6 +2912,238 @@
           {
             "bearer": []
           }
+        ]
+      }
+    }, 
+    "/api/v1/notification-configs": {
+      "post": {
+        "operationId": "NotificationConfigController_create",
+        "summary": "Create a new notification config",
+        "description": "Create a new notification config with the provided details. Note: This endpoint is restricted for internal use only.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotificationConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Notification config created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid notification config data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      },
+      "get": {
+        "operationId": "NotificationConfigController_findAll",
+        "summary": "Get all notification configs",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all notification configs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      }
+    },
+    "/api/v1/notification-configs/{id}": {
+      "get": {
+        "operationId": "NotificationConfigController_findOne",
+        "summary": "Get notification config by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The ID of the notification config",
+            "example": "notification_config_123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the notification config",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Notification config not found"
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      },
+      "put": {
+        "operationId": "NotificationConfigController_update",
+        "summary": "Update notification config",
+        "description": "Updates a notification config with the provided details. Note: This endpoint is restricted for internal use only.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The ID of the notification config",
+            "example": "notification_config_123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification config updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid notification config data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Notification config not found"
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      },
+      "delete": {
+        "operationId": "NotificationConfigController_remove",
+        "summary": "Delete notification config",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The ID of the notification config",
+            "example": "notification_config_123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification config deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Notification config not found"
+          }
+        },
+        "tags": [
+          "Notification Configs"
         ]
       }
     }
