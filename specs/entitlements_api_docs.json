@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://dev-entitlements-api.spectertech.ai/api/v1",
+      "url": "https://dev-entitlements-api.iqraa.ai/api/v1",
       "description": "Production server"
     }
   ],

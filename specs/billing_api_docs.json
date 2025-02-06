@@ -3,13 +3,13 @@
   "x-original-swagger-version": "2.0",
   "info": {
     "title": "Billing API",
-    "description": "Billing API description",
-    "version": "0.1",
-    "contact": {}
+    "description": "Billing service for managing subscriptions, payments, and entitlements",
+    "contact": {},
+    "version": "1.0"
   },
   "servers": [
     {
-      "url": "https://dev-billing-api.iqraa.ai/"
+      "url": "https://dev-billing-api.iqraa.ai/api/v1"
     }
   ],
   "paths": {
