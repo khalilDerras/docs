@@ -1,0 +1,265 @@
+---
+id: EmbeddedCheckoutForm
+title: EmbeddedCheckoutForm
+icon: react
+iconType: solid
+---
+
+
+## Overview
+
+The `EmbeddedCheckoutForm` component is a complete checkout form integrated with Stripe Elements. It includes contact information, payment method details, billing address, and terms acceptance. The form manages loading states, errors, and handles the payment submission process.
+
+## Import
+
+```javascript
+import EmbeddedCheckoutForm from './path/to/EmbeddedCheckoutForm';
+```
+
+## Usage
+
+```jsx
+import React from 'react';
+import EmbeddedCheckoutForm from './components/EmbeddedCheckoutForm';
+
+const CheckoutPage = () => {
+    return (
+        <div>
+            <h1>Checkout</h1>
+            <EmbeddedCheckoutForm />
+        </div>
+    );
+};
+
+export default CheckoutPage;
+```
+
+### Component Code
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import {
+    AddressElement,
+    LinkAuthenticationElement,
+    PaymentElement,
+    useElements,
+    useStripe
+} from '@stripe/react-stripe-js';
+import { useBillingContext } from "@/billing-ui/context/BillingContext";
+import useCreateSubscription from "@/billing-ui/hooks/useCreateSubscription";
+import Config from "@/billing-ui/config";
+import LoadingSpinner from '../ui/LoadingSpinner';
+import LogoIcon from '../../assets/images/icons/logo.svg';
+import PaymentSummary from "@/billing-ui/components/modules/PaymentSummary";
+import Image from 'next/image';
+
+const EmbeddedCheckoutForm = () => {
+    const stripe = useStripe();
+    const { selectedPlan, user, userToken } = useBillingContext();
+
+    const elements = useElements();
+    const [message, setMessage] = useState<String | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isTermsChecked, setIsTermsChecked] = useState(false);
+
+    useEffect(() => {
+        if (!stripe) return;
+
+        const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
+        if (!clientSecret) return;
+
+        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+            switch (paymentIntent?.status) {
+                case "succeeded":
+                    setMessage("Payment succeeded!");
+                    break;
+                case "processing":
+                    setMessage("Your payment is processing.");
+                    break;
+                case "requires_payment_method":
+                    setMessage("Your payment was not successful, please try again.");
+                    break;
+                default:
+                    setMessage("Something went wrong.");
+                    break;
+            }
+        });
+    }, [stripe]);
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+
+        if (!stripe || !elements) return;
+
+        setIsLoading(true);
+
+        try {
+            localStorage.setItem("paymentSuccess", "true");
+            const { error } = await stripe.confirmPayment({
+                elements,
+                confirmParams: { return_url: String(Config.BILLING_RETURN_URL) },
+            });
+        } catch (error: any) {
+            localStorage.removeItem("paymentSuccess");
+            if (error.type === "card_error" || error.type === "validation_error") {
+                setMessage(error.message);
+            } else {
+                setMessage("An unexpected error occurred.");
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <div className="w-full min-h-screen flex items-center justify-center bg-gray-50 p-8">
+            {stripe ? (
+                <div className="w-full max-w-5xl bg-gray-50 p-8 rounded-md flex flex-col h-screen overflow-y-auto">
+                    <div className="flex items-center mb-4">
+                        <button>
+                            <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 18l-6-6 6-6" stroke="#1F2937" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                        <Image src={LogoIcon} alt="icon" className="ml-2" />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-grow overflow-y-auto">
+                        <PaymentSummary plan={selectedPlan!} />
+                        <div className="relative bg-gray-50 p-8 rounded-md">
+                            <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
+                                <h3 className="text-base font-medium text-gray-600">Contact information</h3>
+                                <LinkAuthenticationElement id="link-authentication-element" />
+                                <h3 className="text-base font-medium text-gray-600 mt-6">Payment Method</h3>
+                                <h4 className="text-sm font-medium text-gray-700 mt-2">Card Information</h4>
+                                <PaymentElement id="payment-element" options={{ layout: 'accordion' }} />
+                                <h4 className="text-sm font-medium text-gray-700 mt-6">Cardholder name</h4>
+                                <div className="p-4 bg-gray-50 shadow-md rounded-md">
+                                    <input type="text" placeholder="Full name on card" className="h-12 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm pl-3" />
+                                </div>
+                                <h4 className="text-sm font-medium text-gray-700 mt-6">Billing address</h4>
+                                <div className="p-4 bg-gray-50 shadow-md rounded-md">
+                                    <AddressElement
+                                        options={{
+                                            mode: 'billing',
+                                            fields: {
+                                                country: {
+                                                    placeholder: 'United Arab Emirates'
+                                                },
+                                                line1: {
+                                                    placeholder: 'Address line 1'
+                                                },
+                                                line2: {
+                                                    placeholder: 'Address line 2'
+                                                },
+                                                state: {
+                                                    placeholder: 'Emirate'
+                                                }
+                                            },
+                                            style: {
+                                                base: {
+                                                    iconColor: '#c4f0ff',
+                                                    color: '#000',
+                                                    fontWeight: 500,
+                                                    fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+                                                    fontSize: '16px',
+                                                    fontSmoothing: 'antialiased',
+                                                    ':-webkit-autofill': { color: '#fce883' },
+                                                    '::placeholder': { color: '#87bbfd' },
+                                                },
+                                                invalid: {
+                                                    iconColor: '#ffc7ee',
+                                                    color: '#ffc7ee',
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </div>
+                                <div className="p-6 bg-gray-50 shadow-md rounded-md">
+                                    <div className="flex items-center">
+                                        <input type="checkbox" className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
+                                        <label className="ml-2 text-sm leading-5 text-gray-900">Securely save my information for 1-click checkout</label>
+                                    </div>
+                                </div>
+                                <div className="flex items-center mt-4">
+                                    <input type="checkbox" className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
+                                    <label className="ml-2 text-sm leading-5 text-gray-900">I'm purchasing as a business</label>
+                                </div>
+                                <div className="flex items-center mt-4">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                                        checked={isTermsChecked}
+                                        onChange={(e) => setIsTermsChecked(e.target.checked)}
+                                    />
+                                    <label className="ml-2 text-sm leading-5 text-gray-900">
+                                        You'll be charged the amount and at the frequency listed above until you cancel. We may change our prices as described in our <a href="#" className="text-indigo-600 underline">Terms of Use</a>. You can <a href="#" className="text-indigo-600 underline">cancel any time</a>. By subscribing, you agree to OpenAI's <a href="#" className="text-indigo-600 underline">Terms of Use</a> and <a href="#" className="text-indigo-600 underline">Privacy Policy</a>.
+                                    </label>
+                                </div>
+                                <button
+                                    disabled={isLoading || !elements || !stripe || !isTermsChecked}
+                                    id="submit"
+                                    className={`w-full text-white py-3 rounded flex items-center justify-center ${
+                                        isLoading || !elements || !stripe || !isTermsChecked ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary'
+                                    }`}
+                                >
+                                    {isLoading ? (
+                                        <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-b-4 border-white"></div>
+                                    ) : (
+                                        "Subscribe"
+                                    )}
+                                </button>
+                                {message && <div id="payment-message" className="text-red-500">{message}</div>}
+                            </form>
+                        </div>
+                    </div>
+                    <div className="mt-8 text-sm text-center text-gray-500">
+                        <a href="#" className="text-primary">Terms Privacy</a>
+                    </div>
+                </div>
+            ) : (
+                <LoadingSpinner />
+            )}
+        </div>
+    );
+};
+
+export default EmbeddedCheckoutForm;
+```
+
+## Customization
+
+The `EmbeddedCheckoutForm` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS
+
+ classes to change the appearance of the form elements, buttons, and containers.
+2. **Payment Element Options**: Change the layout and style options in the `PaymentElement` and `AddressElement` components.
+3. **Form Fields**: Add or remove form fields as needed, such as additional input fields for customer details.
+4. **Validation**: Implement custom validation logic for the form fields.
+5. **Messaging**: Customize the success and error messages displayed to the user.
+
+## Example Customization
+
+```jsx
+const CustomizedEmbeddedCheckoutForm = () => {
+    // Customized logic here
+
+    return (
+        <div className="custom-container">
+            {/* Customized JSX here */}
+        </div>
+    );
+};
+
+export default CustomizedEmbeddedCheckoutForm;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `EmbeddedCheckoutForm` component into your page or parent component and include it in the JSX.
+- **Handle Loading and Errors**: Ensure to handle loading states and errors appropriately to provide a good user experience.
+- **Customization**: Leverage the customization options to fit the form into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![EmbeddedCheckoutForm Screenshot](#)

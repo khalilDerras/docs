@@ -1,0 +1,119 @@
+---
+id: ManagePlans
+title: ManagePlans
+icon: react
+iconType: solid
+---
+
+
+## Overview
+
+The `ManagePlans` component provides a user interface for exploring and selecting subscription plans. It includes a toggle for switching between monthly and yearly billing cycles, and integrates with the `PricingTable` component to display available plans.
+
+## Import
+
+```javascript
+import ManagePlans from './path/to/ManagePlans';
+```
+
+## Usage
+
+```jsx
+import React from 'react';
+import ManagePlans from './components/ManagePlans';
+
+const PlansPage = () => {
+    return (
+        <div>
+            <h1>Our Plans</h1>
+            <ManagePlans />
+        </div>
+    );
+};
+
+export default PlansPage;
+```
+
+### Component Code
+
+```jsx
+import React, {useState} from 'react';
+import PricingTable from './PricingTable';
+import Link from 'next/link';
+import CustomToggleButton from '../ui/CustomToggleButton';
+import useBillingPlans from '@/billing-ui/hooks/useBillingPlans';
+import {BILLING_CYCLES} from '../../types';
+import {useBillingContext} from "@/billing-ui/context/BillingContext";
+
+const ManagePlans: React.FC = () => {
+    const {handleSelectPlan, handleContactUs, userToken} = useBillingContext();
+    const [isMonthly, setIsMonthly] = useState(true);
+    const {plans} = useBillingPlans(String(userToken), isMonthly ? BILLING_CYCLES.MONTHLY : BILLING_CYCLES.YEARLY);
+
+    const handleToggle = () => {
+        setIsMonthly((prev) => !prev);
+    };
+
+    return (
+        <div className="min-h-screen flex flex-col justify-between">
+            <div className="flex flex-col items-center py-8">
+                <h1 className="text-3xl font-bold mb-4">Explore our plans</h1>
+                <CustomToggleButton isMonthly={isMonthly} onToggle={handleToggle} />
+                <div className="flex justify-center w-full px-6">
+                    <PricingTable 
+                        onSubscribe={handleSelectPlan} 
+                        onContactUs={handleContactUs} 
+                        plans={plans} 
+                        onTrial={(planCode: string) => {
+                            throw new Error('Function not implemented.');
+                        }} 
+                    />
+                </div>
+            </div>
+            <div className="text-center pb-8">
+                <Link href="/billing/manage-billing" className="text-primary">Manage billing</Link>
+            </div>
+        </div>
+    );
+};
+
+export default ManagePlans;
+```
+
+## Customization
+
+The `ManagePlans` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS classes to change the appearance of the layout, buttons, and text.
+2. **Billing Cycles**: Add more options for billing cycles if needed, and update the toggle logic accordingly.
+3. **Plan Details**: Customize the `PricingTable` component to display additional plan details or features.
+4. **Error Handling**: Implement error handling for the `onTrial` function and other callbacks.
+
+## Example Customization
+
+```jsx
+const CustomizedManagePlans = () => {
+    const customHandleSelectPlan = (planCode) => {
+        console.log("Selected plan:", planCode);
+        // Custom plan selection logic here
+    };
+
+    return (
+        <div className="custom-container">
+            <ManagePlans handleSelectPlan={customHandleSelectPlan} />
+        </div>
+    );
+};
+
+export default CustomizedManagePlans;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `ManagePlans` component into your page or parent component and include it in the JSX.
+- **Handle Plan Selection**: Ensure to provide logic for handling plan selection and contacting support.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![ManagePlans Screenshot](#)

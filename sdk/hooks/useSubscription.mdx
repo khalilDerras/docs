@@ -1,0 +1,147 @@
+---
+id: useSubscription
+title: useSubscription
+icon: react
+iconType: solid
+---
+
+#### Overview
+
+The `useSubscription` hook is a custom React hook designed to fetch and manage the current subscription details of a user. It handles the API call, manages loading and error states, and periodically updates the subscription information.
+
+
+#### Usage
+
+```jsx
+const { subscription, loading, error } = useSubscription(authToken, orgId);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `subscription` (Subscription | undefined): The current subscription details, or undefined if not found.
+- `loading` (boolean): Indicates whether the subscription details are currently being fetched.
+- `error` (string | null): Contains an error message if an error occurred during the process, otherwise null.
+
+#### Example
+
+```jsx
+import React from 'react';
+import useSubscription from './useSubscription';
+
+const SubscriptionComponent = ({ authToken }) => {
+    const { subscription, loading, error } = useSubscription(authToken, orgId);
+
+    if (loading) return <p>Loading subscription...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    return (
+        <div>
+            <h2>Current Subscription</h2>
+            {subscription ? (
+                <div>
+                    <p>Plan: {subscription.plan}</p>
+                    <p>Status: {subscription.status}</p>
+                    <p>Started At: {subscription.startedAt}</p>
+                    {/* Add more fields as needed */}
+                </div>
+            ) : (
+                <p>No subscription found</p>
+            )}
+        </div>
+    );
+};
+
+export default SubscriptionComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/subscriptions/current`
+- Method: GET
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': orgId (if provided)
+
+#### Error Handling
+
+If an error occurs during the API call, the `error` state will be set to the error message. You should handle this in your component to display an appropriate error message to the user.
+
+#### Performance Considerations
+
+- The hook uses `useState` to manage its internal states (subscription, loading, and error).
+- The API call is made initially when the component mounts and then every 2 minutes using `setInterval`.
+- The interval is cleared when the component unmounts to prevent memory leaks.
+
+#### Subscription Object Structure
+
+The `parseSubscriptionResponse` function maps the API response to the following structure:
+
+```typescript
+interface Entitlement {
+    id: string;
+    name: string;
+    code: string;
+    description: string;
+    reportable: boolean;
+    dynamic: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+```
+
+```typescript
+interface PlanEntitlement {
+    entitlement: Entitlement;
+    subscriptionId: string;
+    planEntitlementQuotaId: string;
+    usage: number;
+    planId: string;
+    quota: number;
+}
+```
+
+```typescript
+interface Subscription {
+    id: string;
+    plan: string;
+    entitlements: any;
+    customerId: string;
+    billingTime: string;
+    name: string;
+    status: string;
+    isActive: boolean;
+    createdAt: string;
+    canceledAt: string | null;
+    startedAt: string;
+    endingAt: string | null;
+    subscriptionAt: string;
+    terminatedAt: string | null;
+    previousPlanCode: string | null;
+    nextPlanCode: string | null;
+    downgradePlanDate: string | null;
+    trialEndedAt: string | null;
+    paymentMethods: any;
+    customer: any;
+    isTrial: boolean;
+    planEntitlements: PlanEntitlement[];
+}
+```
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+- A `Subscription` type definition (imported from '@/billing-ui/types')
+
+Ensure these dependencies are properly set up in your project for the hook to function correctly.

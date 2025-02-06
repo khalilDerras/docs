@@ -1,0 +1,69 @@
+---
+title: Initial Setup
+icon: screwdriver-wrench
+iconType: solid
+---
+
+<Check>
+    This guide assumes you have already [installed](/sdk/quickstart) the `@locai1/billing-react-sdk` package in your project.
+</Check>
+
+After installing the `@locai1/billing-react-sdk` package, you need to set up the billing context and reducer in your application. This guide will help you with the initial setup.
+
+<Steps>
+<Step title="Add billingReducer to Your Global Reducer" >
+
+Ensure the `billingReducer` is included in your global reducer setup:
+
+```javascript
+import { combineReducers } from 'redux';
+import billingReducer from '@locai1/billing-react-sdk/toolkit/billing.slice';
+// other reducers
+// example: import authReducer from './auth/auth.slice';
+// example: import chatReducer from './chat/chat.slice';
+
+const rootReducer = combineReducers({
+  billing: billingReducer,
+  // other reducers
+  // example: auth: authReducer,
+  // example: chat: chatReducer,
+});
+
+export default rootReducer;
+```
+</Step>
+<Step title="Wrap Your Application with BillingProvider" >
+
+
+Import and wrap your application or the relevant part of your application with the `BillingProvider`:
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BillingProvider } from '@locai1/billing-react-sdk';
+import App from './App';
+
+ReactDOM.render(
+  <BillingProvider authToken={yourAuthToken}>
+    <App />
+  </BillingProvider>,
+  document.getElementById('root')
+);
+```
+</Step>
+<Step title="Access Context Values" >
+
+Use the `useBillingContext` hook to access the context values in your components:
+
+```jsx
+import React from 'react';
+import { useBillingContext } from '@locai1/billing-react-sdk';
+
+const YourComponent = () => {
+  const { selectedPlan, setSelectedPlan, subscription, setSubscription } = useBillingContext();
+
+  // Your component logic here
+};
+```
+</Step>
+</Steps>

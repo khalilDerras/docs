@@ -1,0 +1,95 @@
+---
+id: useUpdateSubscription
+title: useUpdateSubscription
+icon: react
+iconType: solid
+---
+
+
+
+#### Overview
+
+The `useUpdateSubscription` hook is a custom React hook designed to update a subscription plan using an API endpoint. It manages the state of the updated subscription and provides a function to trigger the update process.
+
+
+#### Usage
+
+```jsx
+const payload = { subscriptionId: 'SUB123', planCode: 'PLAN456' };
+const { subscription, updateSubscription } = useUpdateSubscription(payload, authToken, orgId);
+```
+
+##### Parameters
+
+- `payload` (object, required): An object containing the subscription update details.
+  - `subscriptionId` (string): The ID of the subscription to update.
+  - `planCode` (string): The new plan code for the subscription.
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `subscription` (Subscription | undefined): The updated subscription details, or undefined if not yet updated.
+- `updateSubscription` (function): A function to trigger the subscription update process.
+
+#### Example
+
+```jsx
+import React from 'react';
+import useUpdateSubscription from './useUpdateSubscription';
+
+const UpdateSubscriptionComponent = ({ authToken }) => {
+    const payload = { subscriptionId: 'SUB123', planCode: 'PLAN456' };
+    const { subscription, updateSubscription } = useUpdateSubscription(payload, authToken);
+
+    const handleUpdateSubscription = async () => {
+        await updateSubscription();
+    };
+
+    return (
+        <div>
+            <h2>Update Subscription</h2>
+            <button onClick={handleUpdateSubscription}>
+                Update Subscription
+            </button>
+            {subscription && (
+                <div>
+                    <p>Subscription ID: {subscription.id}</p>
+                    <p>Plan: {subscription.plan}</p>
+                    {/* Add more fields as needed */}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default UpdateSubscriptionComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/subscriptions/${subscriptionId}`
+- Method: UPDATE (Note: This should typically be PUT or PATCH in RESTful APIs)
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': `orgId` (if provided)
+- Body: JSON string containing `planCode`
+
+#### Performance Considerations
+
+- The hook uses `useState` to manage the subscription state.
+- The API call is made only when the `updateSubscription` function is explicitly called, preventing unnecessary requests.
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+- A `Subscription` type definition (imported from '@/billing-ui/types')
+
+Ensure these dependencies are properly set up in your project for the hook to function correctly.

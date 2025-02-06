@@ -1,0 +1,175 @@
+---
+id: ContactModal
+title: ContactModal
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `ContactModal` component is a modal window that allows users to submit their phone numbers to get in touch with sales representatives. It includes input validation and displays a success message upon submission.
+
+## Import
+
+```javascript
+import ContactModal from './path/to/ContactModal';
+```
+
+## Usage
+
+```jsx
+import React, { useState } from 'react';
+import ContactModal from './components/ContactModal';
+
+const App = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleSubmit = (number: string) => {
+        console.log('Phone number submitted:', number);
+    };
+
+    return (
+        <div>
+            <button onClick={() => setIsModalOpen(true)}>Open Contact Modal</button>
+            {isModalOpen && (
+                <ContactModal 
+                    onSubmit={handleSubmit} 
+                    onClose={() => setIsModalOpen(false)} 
+                />
+            )}
+        </div>
+    );
+};
+
+export default App;
+```
+
+### Component Code
+
+```jsx
+import React, { useState } from 'react';
+import Image from 'next/image';
+import TickIcon from '../../assets/images/icons/tick_green.svg';
+import CloseIcon from '../../assets/images/icons/close.svg';
+import Button from '../ui/Button';
+
+interface ContactModalProps {
+    onSubmit: (number: string) => void;
+    onClose: () => void;
+}
+
+const ContactModal: React.FC<ContactModalProps> = ({ onSubmit, onClose }) => {
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPhoneNumber(event.target.value);
+        setError('');
+    };
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!phoneNumber.trim()) {
+            setError('Please enter a valid phone number.');
+            return;
+        }
+        onSubmit(phoneNumber);
+        setSubmitted(true);
+    };
+
+    if (submitted) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-xl z-50">
+                <div className="relative rounded-xl p-8 max-w-sm mx-auto text-center">
+                    <button onClick={onClose} className="absolute top-3 right-3" aria-label="Close modal">
+                        <Image src={CloseIcon} alt="Close" width={24} height={24} />
+                    </button>
+                    <Image src={TickIcon} alt="Success Icon" width={50} height={50} className="my-5 mx-auto" />
+                    <h2 className="text-xl font-semibold mb-4 text-gray-800">Request Received</h2>
+                    <p className="text-sm text-gray-600">
+                        Thank you for reaching out! We have received your request and will contact you within 24-48
+                        hours.
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-xl z-50">
+            <form onSubmit={handleSubmit} className="relative bg-white rounded-2xl shadow-lg w-full max-w-md">
+                <button onClick={onClose} className="absolute top-3 right-3" aria-label="Close modal">
+                    <Image src={CloseIcon} alt="Close" width={24} height={24} />
+                </button>
+                <div className="p-6">
+                    <h2 className="text-xl my-4 text-gray-800 text-center">Let's Connect</h2>
+                    <p className="text-base text-gray-600 mb-4 text-center">
+                        Please enter your phone number and one of our sales representatives will get in touch with you
+                        shortly.
+                    </p>
+                    <div className="mb-4">
+                        <label htmlFor="phoneNumber" className="sr-only">Phone Number</label>
+                        <div className="flex">
+                            <select className="bg-gray-200 rounded-l-lg text-gray-700 h-10 w-20">
+                                <option>AE +971</option>
+                                <option>US +1</option>
+                            </select>
+                            <input
+                                id="phoneNumber"
+                                type="text"
+                                placeholder="555-000-0000"
+                                value={phoneNumber}
+                                onChange={handleInputChange}
+                                className="flex-1 border rounded-r-lg border-gray-200 h-10 text-gray-800"
+                            />
+                        </div>
+                        {error && <p className="text-red-500 mt-2">{error}</p>}
+                    </div>
+                    <Button text={'Submit'} className="w-full bg-primary hover:bg-secondaryHover rounded-xl h-12" />
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default ContactModal;
+```
+
+## Customization
+
+The `ContactModal` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the CSS classes to change the appearance of the modal, form elements, and buttons.
+2. **Form Fields**: Add more input fields or modify existing ones to capture additional user information.
+3. **Validation**: Implement additional validation logic to ensure the correctness of user input.
+4. **Icons**: Change the success and close icons to fit the design of your application.
+
+## Example Customization
+
+```jsx
+const CustomizedContactModal = () => {
+    const handleCustomSubmit = (number: string) => {
+        console.log("Custom phone number submitted:", number);
+    };
+
+    return (
+        <ContactModal 
+            onSubmit={handleCustomSubmit} 
+            onClose={() => console.log("Custom close modal action")} 
+        />
+    );
+};
+
+export default CustomizedContactModal;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `ContactModal` component into your page or parent component and include it in the JSX.
+- **Handle Submission**: Ensure to provide logic for handling phone number submission and closing the modal.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![ContactModal Component Screenshot](#)

@@ -1,0 +1,171 @@
+---
+id: UpgradeModal
+title: UpgradeModal
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `UpgradeModal` component provides a user interface for prompting users to upgrade their subscription plan or start a trial. It displays the benefits of upgrading and includes a button to either upgrade the plan or start a trial.
+
+## Import
+
+```javascript
+import UpgradeModal from './path/to/UpgradeModal';
+```
+
+## Usage
+
+```jsx
+import React, { useState } from 'react';
+import UpgradeModal from './components/UpgradeModal';
+
+const App = () => {
+    const [isModalOpen, setIsModalOpen] = useState(true);
+
+    const handleUpgrade = () => {
+        console.log("Upgrade plan action");
+        setIsModalOpen(false);
+    };
+
+    const handleTrial = (planCode: string) => {
+        console.log("Start trial for plan:", planCode);
+        setIsModalOpen(false);
+    };
+
+    return (
+        <div>
+            {isModalOpen && (
+                <UpgradeModal 
+                    handleUpgrade={handleUpgrade} 
+                    handleTrial={handleTrial} 
+                />
+            )}
+        </div>
+    );
+};
+
+export default App;
+```
+
+### Component Code
+
+```jsx
+import React from 'react';
+import Image from 'next/image';
+import PremiumIconImage from '../../assets/images/icons/premium.svg';
+import DocIconImage from '../../assets/images/icons/doc.svg';
+import DraftIconImage from '../../assets/images/icons/draft.svg';
+import AskIconImage from '../../assets/images/icons/ask.svg';
+import CloseIcon from '../../assets/images/icons/close.svg';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import { useBillingContext } from '@/billing-ui/context/BillingContext';
+import useSubscription from '@/billing-ui/hooks/useSubscription';
+import useBillingPlans from '@/billing-ui/hooks/useBillingPlans';
+import { BILLING_CYCLES, PRO_PLAN_NAME } from '@/billing-ui/types';
+
+interface UpgradeModalProps {
+    handleUpgrade: () => void;
+    handleTrial: (planCode: string) => void;
+}
+
+const UpgradeModal: React.FC<UpgradeModalProps> = ({ handleTrial, handleUpgrade }) => {
+    const { subscription, userToken } = useBillingContext();
+    const { plans, loading: plansLoading } = useBillingPlans(String(userToken), BILLING_CYCLES.MONTHLY);
+    const currentPlan = plans.find((plan: any) => plan.name === PRO_PLAN_NAME);
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-xl z-50">
+            <div className="p-10 rounded-2xl max-w-4xl flex flex-col items-center space-y-6 relative">
+                <div className="flex flex-col items-center mb-4">
+                    <Image src={PremiumIconImage} alt="Premium Icon" width={100} height={100} className="mb-2" />
+                    <h1 className="text-xl font-bold text-center">{subscription.id ? 'Upgrade to Access the Full Potential of Specter' : 'Try Specter Trial: Access Its Full Potential'}</h1>
+                </div>
+                <p className="text-gray-600 text-center text-lg">
+                    Unlock limitless content possibilities. Upgrade now to exceed your credit limit and access valuable content that fuels creativity.
+                </p>
+                <div className="flex justify-around w-full space-x-4">
+                    <Card className="bg-gray-50 w-1/3 p-6 text-center items-center">
+                        <div className="bg-green-100 p-4 rounded-full mb-4 mx-auto">
+                            <Image src={DocIconImage} alt="Doc Icon" width={30} height={30} />
+                        </div>
+                        <p className="text-xs font-semibold mb-2">Elevate drafting experience</p>
+                        <p className="text-gray-600 text-sm">
+                            Revolutionize document creation with Specter's AI-powered module.
+                        </p>
+                    </Card>
+                    <Card className="bg-gray-50 w-1/3 p-6 text-center items-center">
+                        <div className="bg-green-100 p-4 rounded-full mb-4 mx-auto">
+                            <Image src={DraftIconImage} alt="Draft Icon" width={30} height={30} />
+                        </div>
+                        <p className="text-xs font-semibold mb-2">Comprehensive Summarization</p>
+                        <p className="text-gray-600 text-sm">
+                            Master legal documents as Specter distills them into brief summaries.
+                        </p>
+                    </Card>
+                    <Card className="bg-gray-50 w-1/3 p-6 text-center items-center">
+                        <div className="bg-green-100 p-4 rounded-full mb-4 mx-auto">
+                            <Image src={AskIconImage} alt="Ask Icon" width={30} height={30} />
+                        </div>
+                        <p className="text-xs font-semibold mb-2">Simplify legal support</p>
+                        <p className="text-gray-600 text-sm">
+                            Specter AI provides precise answers to legal queries instantly.
+                        </p>
+                    </Card>
+                </div>
+                <Button 
+                    text={subscription.id ? 'Upgrade Plan' : 'Try 7 Days Trial'}
+                    className="bg-green-500 text-white hover:bg-green-600 px-10 py-4 rounded-full"
+                    onClick={subscription.id ? handleUpgrade : () => handleTrial(String(currentPlan?.code))}
+                />
+            </div>
+        </div>
+    );
+};
+
+export default UpgradeModal;
+```
+
+## Customization
+
+The `UpgradeModal` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS classes to change the appearance of the modal and its elements.
+2. **Icons**: Change the icons used to fit the branding of your application.
+3. **Plan Details**: Customize the displayed plan details and benefits to better fit your application's needs.
+4. **Button Actions**: Modify the actions taken when the "Upgrade Plan" or "Try 7 Days Trial" buttons are clicked.
+
+## Example Customization
+
+```jsx
+const CustomizedUpgradeModal = () => {
+    const handleCustomUpgrade = () => {
+        console.log("Custom upgrade plan action");
+    };
+
+    const handleCustomTrial = (planCode: string) => {
+        console.log("Custom start trial for plan:", planCode);
+    };
+
+    return (
+        <UpgradeModal 
+            handleUpgrade={handleCustomUpgrade} 
+            handleTrial={handleCustomTrial} 
+        />
+    );
+};
+
+export default CustomizedUpgradeModal;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `UpgradeModal` component into your page or parent component and include it in the JSX.
+- **Handle Actions**: Ensure to provide logic for handling plan upgrades and starting trials.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![UpgradeModal Component Screenshot](#)

@@ -1,0 +1,32 @@
+---
+title: 'Entitlements Usage'
+icon: 'list-check'
+iconType: 'solid'
+---
+import AuthenticationWarning from '/snippets/authentication-warning.mdx'
+
+<AuthenticationWarning />
+This guide explains the flow for using entitlements in your app.
+
+## Entitlement Usage Flow
+
+<img src="/images/Entitlement-Usage.png" alt="Entitlements Usage Flow" />
+
+<Steps>
+  <Step title="Client UI Initiates Action">
+    The client UI sends a request to the client backend for an action, such as downloading a resource.
+  </Step>
+  <Step title="Client Backend Checks Entitlement">
+    The client backend calls the Billing API endpoint `/api/v1/entitlements/status` to check if the user is allowed to perform the action.
+  </Step>
+  <Step title="Billing API Responds">
+    If the user is not entitled, the Billing API returns an error. The client backend should handle this error appropriately.
+    If the user is entitled, the Billing API returns a success response.
+  </Step>
+  <Step title="Client Backend Processes Action">
+    If entitled, the client backend can perform the action or forward the success response to the client UI.
+  </Step>
+  <Step title="Report Usage">
+    The action execution is reported to the Billing API using the `/api/v1/entitlements/usage` endpoint.
+  </Step>
+</Steps>

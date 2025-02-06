@@ -1,0 +1,95 @@
+---
+id: useGetUsageAndQuota
+title: useGetUsageAndQuota
+icon: react
+iconType: solid
+---
+
+
+
+#### Overview
+
+The `useGetUsageAndQuota` hook is a custom React hook designed to fetch user's usage & quota. It handles the API call, manages loading and error states, and returns the usage and quota information for current subscription.
+
+
+#### Usage
+
+```jsx
+const { getUsageAndQuota, loading, error } = useGetUsageAndQuota(authToken, orgId);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `getUsageAndQuota` (UsageAndQuota): Usage And Quota of the user's current subscription.
+- `loading` (boolean): Indicates whether the invoices are currently being fetched.
+- `error` (string | null): Contains an error message if an error occurred during fetching, otherwise null.
+
+#### UsageAndQuota Object Structure
+
+
+```typescript
+interface UsageAndQuota {
+  id: string;
+  subscriptionId: string;
+  planEntitlementQuotaId: string;
+  usage: number;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+#### Example
+
+```jsx
+import React from 'react';
+import useGetUsageAndQuota from './useGetUsageAndQuota';
+
+const GetUsageAndQuotaComponent = ({ authToken, orgId }) => {
+  const { getUsageAndQuota, loading, error } = useGetUsageAndQuota(authToken, orgId);
+
+  const handleGetUsageAndQuotaComponent = async () => {
+    await getUsageAndQuota({ entitlementCode: '1', planId: '1' });
+  };
+
+  if (loading) return <div>Loading plans...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div>
+      <h2>Usage and Quota</h2>
+      <div> <button onClick={handleGetUsageAndQuotaComponent}>Get Usage and Quota</button> </div>
+    </div>
+  );
+};
+```
+
+```jsx
+export default GetUsageAndQuotaComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/entitlements/usage-info`
+- Method: GET
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': `orgId` (if provided)
+- Body: JSON string containing `UsageAndQuota`
+
+#### Performance Considerations
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined.

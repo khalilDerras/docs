@@ -1,0 +1,92 @@
+---
+title: 'Introduction to Billing Service'
+icon: 'star'
+iconType: 'solid'
+---
+
+
+Welcome to our comprehensive guide on setting up and managing your billing infrastructure. Our billing service provides a robust solution for handling subscription plans, entitlements, and payments seamlessly.
+
+
+## Getting Started
+
+<Steps>
+  <Step title="Set Up Subscription Plans">
+    We will set up your pricing tiers and features to create attractive subscription plans for your customers.
+    <Note>
+      Currently, we support fixed price plans.
+    </Note>
+    
+    
+  </Step>
+
+  <Step title="Configure Entitlements">
+    Map your subscription plans to specific entitlements, allowing fine-grained control over feature access.
+
+    <Note>
+      Entitlement creation is a manual process. We will collect your requirements and configure the entitlements on our side.
+    </Note>
+  </Step>
+
+  <Step title="Integrate Payment Providers">
+    Connect with Stripe to process transactions securely and efficiently.
+
+    <Note>
+      We currently support only Stripe as our payment gateway. You'll need to link your Stripe account to our service, which requires a one-time configuration.
+    </Note>
+    <Tip>
+      
+      Once you've linked your Stripe account, you'll be able to process payments through our <Link href="/sdk/components/EmbeddedCheckoutForm">Embedded Checkout.</Link>
+    </Tip>
+
+  </Step>
+
+  <Step title="Implement Billing Logic">
+    Utilize our <Link href="/sdk/intro">SDK</Link> to handle subscription management, payment processing, and entitlement checks.
+
+    
+  </Step>
+</Steps>
+
+## How It All Works Together
+
+<Accordion title="Subscription Lifecycle">
+  1. User selects a subscription plan
+  2. Payment is processed through the integrated payment provider
+  3. Subscription is activated, and entitlements are granted
+  4. Regular billing occurs based on the subscription cycle
+  5. Entitlements are checked for feature access throughout the app
+</Accordion>
+
+<Accordion title="Entitlement Management">
+  - Entitlements are dynamically updated based on the user's current subscription
+  - The SDK provides hooks to easily check entitlements in your application
+  - Granular control allows for feature-specific access management
+</Accordion>
+
+<Accordion title="Payment Processing">
+  - Secure handling of payment information
+  - Support for stripe payment gateway
+  - Automated recurring billing and invoice generation
+</Accordion>
+
+## Next Steps
+
+Now that you have an overview of our billing service, dive deeper into each component to set up your tailored billing infrastructure:
+
+<CardGroup cols={2}>
+  <Card title="Authentication and Plans" icon="key" href="/tutorials/authentication-and-plans">
+    Learn how to authenticate users and manage subscription plans.
+  </Card>
+  <Card title="Entitlements Usage" icon="list-check" href="/tutorials/entitlements-usage">
+    Discover how to implement and check entitlements in your app.
+  </Card>
+  <Card title="Payment Flow" icon="credit-card" href="/tutorials/payment-flow">
+    Set up a smooth payment process using Stripe integration.
+  </Card>
+  <Card title="Using Our SDK" icon="react" href="/sdk/intro">
+    Learn how to use our SDK to manage your billing lifecycle.
+  </Card>
+</CardGroup>
+
+By leveraging our billing service, you can focus on building great features while we handle the complexities of subscription management, entitlements, and payments.

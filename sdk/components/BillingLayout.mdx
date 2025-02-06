@@ -1,0 +1,190 @@
+---
+id: BillingLayout
+title: BillingLayout
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `BillingLayout` component provides a layout that manages various billing-related modals, such as the billing modal, success modal, contact modal, upgrade modal, and entitlement usage limit modal. It integrates with the billing context to manage the state and actions related to billing and subscriptions.
+
+## Import
+
+```javascript
+import BillingLayout from './path/to/BillingLayout';
+```
+
+## Usage
+
+```jsx
+import React from 'react';
+import BillingLayout from './components/BillingLayout';
+
+const BillingPage = () => {
+    return (
+        <BillingLayout>
+            <div>
+                <h1>Welcome to the Billing Page</h1>
+                {/* Other page content */}
+            </div>
+        </BillingLayout>
+    );
+};
+
+export default BillingPage;
+```
+
+### Component Code
+
+```jsx
+import React, { useEffect } from 'react';
+import { useBillingContext } from "@/billing-ui/context/BillingContext";
+import LoadingSpinner from '@/billing-ui/components/ui/LoadingSpinner';
+import dynamic from 'next/dynamic';
+import useCreateSubscription from "@/billing-ui/hooks/useCreateSubscription";
+import useSubscription from "@/billing-ui/hooks/useSubscription";
+
+const BillingModal = dynamic(() => import('@/billing-ui/components/modals/BillingModal'), {
+    loading: () => <LoadingSpinner />,
+});
+
+const SuccessModal = dynamic(() => import('@/billing-ui/components/modals/SuccessModal'), {
+    loading: () => <LoadingSpinner />,
+});
+
+const ContactModal = dynamic(() => import('@/billing-ui/components/modals/ContactModal'), {
+    loading: () => <LoadingSpinner />,
+});
+
+const UpgradeModal = dynamic(() => import('@/billing-ui/components/modals/UpgradeModal'), {
+    loading: () => <LoadingSpinner />,
+});
+
+const EntitlementUsageLimitModal = dynamic(() => import('@/billing-ui/components/modals/EntitlementUsageLimitModal'), {
+    loading: () => <LoadingSpinner />,
+});
+
+const BillingLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const {
+        isBillingModalOpen,
+        showSuccessModal,
+        showContactModal,
+        showUpgradeModal,
+        setIsBillingModalOpen,
+        setShowWelcomeModal,
+        setShowUpgradeModal,
+        handleSelectPlan,
+        handleContactUs,
+        handleSubmitContactUsForm,
+        closeSuccessModal,
+        closeContactModal,
+        closeBillingModal,
+        handleUpgrade,
+        handleSuccess,
+        userToken,
+        showEntitlementUsageLimitModal,
+    } = useBillingContext();
+
+    const { subscription, loading: subscriptionLoading } = useSubscription(String(userToken)) as any;
+    const { createSubscription, error } = useCreateSubscription(userToken);
+
+    useEffect(() => {
+        if (subscription && !subscription.isActive) {
+            setIsBillingModalOpen(true);
+        } else if (subscription && subscription?.isActive) {
+            setIsBillingModalOpen(false);
+        }
+        console.log(subscription)
+    }, [subscription]);
+
+    useEffect(() => {
+        if (localStorage.paymentSuccess && subscription) {
+            setIsBillingModalOpen(false);
+            handleSuccess(subscription);
+            localStorage.removeItem('paymentSuccess');
+        }
+    }, [localStorage, subscription]);
+
+    const handleTrial = async (planCode: string) => {
+        await createSubscription({
+            planCode,
+            isTrial: true,
+        });
+        if (!error) {
+            setShowWelcomeModal(true);
+            setIsBillingModalOpen(false);
+            setShowUpgradeModal(false);
+        }
+    };
+
+    return (
+        <>
+            {children}
+            {showEntitlementUsageLimitModal && (
+                <EntitlementUsageLimitModal />
+            )}
+            {isBillingModalOpen && (
+                <BillingModal
+                    onSelectPlan={handleSelectPlan}
+                    onContactUs={handleContactUs}
+                    onTrial={handleTrial}
+                    onClose={closeBillingModal}
+                />
+            )}
+            {showSuccessModal && (
+                <SuccessModal onClose={closeSuccessModal} />
+            )}
+            {showContactModal && (
+                <ContactModal onSubmit={handleSubmitContactUsForm} onClose={closeContactModal} />
+            )}
+            {showUpgradeModal && (
+                <UpgradeModal handleTrial={handleTrial} handleUpgrade={handleUpgrade} />
+            )}
+        </>
+    );
+};
+
+export default BillingLayout;
+```
+
+## Customization
+
+The `BillingLayout` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the CSS classes to change the appearance of the modals and layout.
+2. **Additional Modals**: Add more modals as needed for different billing-related actions.
+3. **State Management**: Customize the state management logic to handle additional states or actions.
+4. **Dynamic Imports**: Customize the dynamic imports to include more components or modals.
+
+## Example Customization
+
+```jsx
+const CustomizedBillingLayout = () => {
+    const customHandleSuccess = (subscription) => {
+        console.log("Subscription successful:", subscription);
+        // Custom success logic here
+    };
+
+    return (
+        <BillingLayout handleSuccess={customHandleSuccess}>
+            <div>
+                <h1>Customized Billing Page</h1>
+                {/* Other customized content */}
+            </div>
+        </BillingLayout>
+    );
+};
+
+export default CustomizedBillingLayout;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `BillingLayout` component into your page or parent component and include it in the JSX.
+- **Handle Modals**: Ensure to handle the logic for opening and closing modals appropriately.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![BillingLayout Component Screenshot](#)

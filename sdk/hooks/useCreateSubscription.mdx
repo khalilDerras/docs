@@ -1,0 +1,103 @@
+---
+id: useCreateSubscription
+title: useCreateSubscription
+icon: react
+iconType: solid
+---
+
+
+#### Overview
+
+The `useCreateSubscription` hook is a custom React hook designed to create a subscription using an API endpoint. It manages the subscription creation process, handles loading and error states, and provides the created subscription details.
+
+#### Usage
+
+```jsx
+const { createSubscription, loading, error, subscription } = useCreateSubscription(authToken, orgId);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `createSubscription` (function): A function to create a subscription with the provided payload.
+- `loading` (boolean): Indicates whether a subscription is currently being created.
+- `error` (string | null): Contains an error message if an error occurred during the process, otherwise null.
+- `subscription` (object | null): The created subscription details, or null if no subscription has been created yet.
+
+#### createSubscription Function
+
+The `createSubscription` function is used to initiate the subscription creation process.
+
+##### Parameters
+
+- `payload` (object, required): An object containing the subscription details.
+  - `planCode` (string): The code of the plan to subscribe to.
+  - `isTrial` (boolean): Indicates whether this is a trial subscription.
+
+##### Returns
+
+This function doesn't return a value directly, but it updates the hook's state with the created subscription details.
+
+#### Example
+
+```jsx
+import React from 'react';
+import useCreateSubscription from './useCreateSubscription';
+
+const SubscriptionComponent = ({ authToken }) => {
+    const { createSubscription, loading, error, subscription } = useCreateSubscription(authToken, orgId);
+
+    const handleCreateSubscription = async () => {
+        const payload = { planCode: 'PLAN123', isTrial: true };
+        await createSubscription(payload);
+    };
+
+    return (
+        <div>
+            <h2>Create Subscription</h2>
+            <button onClick={handleCreateSubscription} disabled={loading}>
+                {loading ? 'Creating...' : 'Create Subscription'}
+            </button>
+            {error && <p>Error: {error}</p>}
+            {subscription && <p>Subscription Created: {JSON.stringify(subscription)}</p>}
+        </div>
+    );
+};
+
+export default SubscriptionComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/subscriptions`
+- Method: POST
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': orgId (if provided) 
+- Body: JSON string containing `planCode` and `isTrial`
+
+#### Error Handling
+
+If an error occurs during the API call, the `error` state will be set to the error message. You should handle this in your component to display an appropriate error message to the user.
+
+#### Performance Considerations
+
+- The hook uses `useState` to manage its internal state, ensuring efficient updates and re-renders.
+- The API call is made only when the `createSubscription` function is explicitly called, preventing unnecessary requests.
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+
+Ensure this dependency is properly set up in your project for the hook to function correctly.

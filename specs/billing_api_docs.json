@@ -1,0 +1,4604 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Notifications API",
+    "description": "Notification service for sending email, sms and push notifications",
+    "contact": {},
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev-billing-api.iqraa.ai/"
+    }
+  ],
+  "paths": {
+    "/api/v1/health-check": {
+      "get": {
+        "operationId": "AppController_checkHealth",
+        "summary": "Check the health status of the service",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notification-configs": {
+      "post": {
+        "operationId": "NotificationConfigController_create",
+        "summary": "Create a new notification config",
+        "description": "Create a new notification config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotificationConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The notification config has been successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      },
+      "get": {
+        "operationId": "NotificationConfigController_findAll",
+        "summary": "Get all NotificationConfigs",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all available plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      }
+    },
+    "/api/v1/notification-configs/{id}": {
+      "get": {
+        "operationId": "NotificationConfigController_findOne",
+        "summary": "Get the NotificationConfig by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the notification config",
+            "example": "notification_config_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the NotificationConfig",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotificationConfig not found"
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      },
+      "put": {
+        "operationId": "NotificationConfigController_update",
+        "summary": "Update a existing notification config",
+        "description": "Updates a notification config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The notification config has been successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      },
+      "delete": {
+        "operationId": "NotificationConfigController_remove",
+        "summary": "Delete the NotificationConfig by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the notification config",
+            "example": "notification_config_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "NotificationConfig deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotificationConfig not found"
+          }
+        },
+        "tags": [
+          "Notification Configs"
+        ]
+      }
+    },
+    "/api/v1/payments": {
+      "post": {
+        "operationId": "PaymentController_createPaymentIntent",
+        "summary": "Create a payment intent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentIntentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment intent created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/callback": {
+      "get": {
+        "operationId": "PaymentController_handlePaymentCallback",
+        "summary": "Handle payment callback",
+        "parameters": [
+          {
+            "name": "redirect_status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "payment_intent_client_secret",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "payment_intent",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "301": {
+            "description": "Redirect to payment callback return URL"
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/payments/{clientSecret}": {
+      "get": {
+        "operationId": "PaymentController_retrievePaymentIntent",
+        "summary": "Retrieve payment intent",
+        "parameters": [
+          {
+            "name": "clientSecret",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment intent retrieved successfully"
+          },
+          "404": {
+            "description": "Payment intent not found"
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/current-usage": {
+      "get": {
+        "operationId": "CustomerController_getCustomerCurrentUsage",
+        "summary": "Get customer current usage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Customer found"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/{externalCustomerId}": {
+      "get": {
+        "operationId": "CustomerController_getCustomer",
+        "summary": "Get customer by external customer ID",
+        "parameters": [
+          {
+            "name": "externalCustomerId",
+            "required": true,
+            "in": "path",
+            "description": "External ID of the customer",
+            "example": "org1::user123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer found"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions": {
+      "post": {
+        "operationId": "SubscriptionController_create",
+        "summary": "Create a new subscription",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubscriptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "SubscriptionController_findAll",
+        "summary": "Get all subscriptions",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all subscriptions"
+          },
+          "403": {
+            "description": "Forbidden - Only administrators can access this endpoint"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "SubscriptionController_update",
+        "summary": "Update a subscription for the authenticated user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "The subscription details to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/current": {
+      "get": {
+        "operationId": "SubscriptionController_getCurrentSubscription",
+        "summary": "Get current subscription for the authenticated user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns the current subscription or an empty object if the user is not an admin"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/compatible-addons": {
+      "get": {
+        "operationId": "SubscriptionController_getCompatibleAddons",
+        "summary": "Get compatible addons for current subscription",
+        "description": "Returns list of addons that can be purchased for the current subscription",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of compatible addons"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/addons": {
+      "get": {
+        "operationId": "SubscriptionController_getSubscriptionAddons",
+        "summary": "Get all addons for the current subscription",
+        "description": "Returns list of addons purchased for the current subscription",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of subscription addons"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/terminate": {
+      "delete": {
+        "operationId": "SubscriptionController_terminate",
+        "summary": "Terminate a subscription for the authenticated user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Subscription terminated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/{externalSubscriptionId}": {
+      "delete": {
+        "operationId": "SubscriptionController_remove",
+        "summary": "Delete a subscription",
+        "parameters": [
+          {
+            "name": "externalSubscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "External ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription deleted successfully"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/add-seats": {
+      "post": {
+        "operationId": "SubscriptionController_addSeats",
+        "summary": "Add seats to the current subscription",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSeatsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seats added successfully"
+          },
+          "403": {
+            "description": "Forbidden - No organization associated"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/seats-number": {
+      "get": {
+        "operationId": "SubscriptionController_getSeatsNumber",
+        "summary": "Get the number of seats for the current subscription",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved usage and quota for seats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "type": "number"
+                    },
+                    "quota": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - No organization associated"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/subscriptions/billing-metric/report-usage": {
+      "post": {
+        "operationId": "SubscriptionController_reportUsage",
+        "summary": "Report subscription usage",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionReportUsageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usage reported successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/entitlements/report": {
+      "post": {
+        "operationId": "EntitlementController_reportUsage",
+        "summary": "Report entitlement usage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntitlementReportUsageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usage reported successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/entitlements/status": {
+      "post": {
+        "operationId": "EntitlementController_isUserEntitledTo",
+        "summary": "Check user entitlement status",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntitlementReportUsageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entitlement status retrieved successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/entitlements/usage-info": {
+      "get": {
+        "operationId": "EntitlementController_getUsageInfo",
+        "summary": "Get usage and quota for a subscription and entitlement",
+        "parameters": [
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "planId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved usage and quota",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageInfoResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/entitlements/usage-info-by-plan-code": {
+      "get": {
+        "operationId": "EntitlementController_getUsageInfoByPlanCode",
+        "summary": "Get usage and quota for a subscription and entitlement by plan code",
+        "parameters": [
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "planCode",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved usage and quota",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageInfoResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billing-configs": {
+      "post": {
+        "operationId": "BillingConfigController_create",
+        "summary": "Create a new billing config",
+        "description": "Create a new billing config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBillingConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The billing config has been successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "BillingConfigController_findAll",
+        "summary": "Get all BillingConfigs",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all available plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateBillingConfigDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billing-configs/category/{category}": {
+      "get": {
+        "operationId": "BillingConfigController_findByCategory",
+        "summary": "Get the BillingConfig by category",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": true,
+            "in": "path",
+            "description": "The category of the billing config",
+            "example": "upgrade",
+            "schema": {
+              "enum": [
+                "upgrade",
+                "downgrade",
+                "billing",
+                "grace_period",
+                "terminate"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the BillingConfig by category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "BillingConfig not found"
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billing-configs/{id}": {
+      "get": {
+        "operationId": "BillingConfigController_findOne",
+        "summary": "Get the BillingConfig by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the billing config",
+            "example": "billing_config_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the BillingConfig",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "BillingConfig not found"
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "BillingConfigController_update",
+        "summary": "Update a existing billing config",
+        "description": "Updates a billing config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBillingConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The billing config has been successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "BillingConfigController_remove",
+        "summary": "Delete the BillingConfig by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the billing config",
+            "example": "billing_config_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "BillingConfig deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillingConfigDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "BillingConfig not found"
+          }
+        },
+        "tags": [
+          "Billing Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invoices": {
+      "get": {
+        "operationId": "InvoicesController_getInvoices",
+        "summary": "Get customer invoices",
+        "description": "Retrieve all invoices for the authenticated customer.",
+        "parameters": [
+          {
+            "name": "accept-language",
+            "required": true,
+            "in": "header",
+            "description": "Language for invoice fields",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of invoices retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerInvoicesResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Customer ID is missing or invalid"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "InvoicesController_createInvoice",
+        "summary": "Create new invoice",
+        "description": "Create a new invoice for the authenticated customer.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Invoice creation details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Invoice created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid invoice data"
+          },
+          "403": {
+            "description": "Forbidden - Customer ID is missing or invalid"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invoices/{id}/pdf": {
+      "get": {
+        "operationId": "InvoicesController_generatePdf",
+        "summary": "Generate PDF for invoice",
+        "description": "Generate and download a PDF version of the specified invoice.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Invoice ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": true,
+            "in": "header",
+            "description": "Language for the PDF",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PDF generated successfully",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Customer ID is missing or invalid"
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invoices/{id}": {
+      "get": {
+        "operationId": "InvoicesController_getInvoice",
+        "summary": "Get invoice by ID",
+        "description": "Retrieve details of a specific invoice.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Invoice ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": true,
+            "in": "header",
+            "description": "Language for invoice fields",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Customer ID is missing or invalid"
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "InvoicesController_updateInvoice",
+        "summary": "Update invoice",
+        "description": "Update an existing invoice. Only draft invoices can be updated.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invoice updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid invoice data or invoice not in draft status"
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invoices/{id}/finalize": {
+      "put": {
+        "operationId": "InvoicesController_finalizeInvoice",
+        "summary": "Finalize invoice",
+        "description": "Finalize an invoice, making it ready for payment.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Invoice ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice finalized successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status transition - Invoice cannot be finalized"
+          },
+          "403": {
+            "description": "Forbidden - Customer ID is missing or invalid"
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invoices/{id}/void": {
+      "put": {
+        "operationId": "InvoicesController_voidInvoice",
+        "summary": "Void invoice",
+        "description": "Void an existing invoice, marking it as cancelled.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Invoice ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice voided successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cannot void paid invoice or invoice in invalid state"
+          },
+          "403": {
+            "description": "Forbidden - Customer ID is missing or invalid"
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        },
+        "tags": [
+          "Invoices"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invoices-templates": {
+      "post": {
+        "operationId": "InvoiceTemplatesController_createTemplate",
+        "summary": "Create invoice template",
+        "description": "Creates a new invoice template with specified layout and components.\n    - Validates required fields and component structure\n    - Ensures unique template names\n    - Optionally sets as default template\n    Requires admin access.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Template configuration including layout, required fields, and display settings",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvoiceTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvoiceTemplateDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid template data or duplicate template name"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      },
+      "get": {
+        "operationId": "InvoiceTemplatesController_listTemplates",
+        "summary": "List all invoice templates",
+        "description": "Retrieves all available invoice templates. Requires admin access.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of templates retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateInvoiceTemplateDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      }
+    },
+    "/api/v1/invoices-templates/default": {
+      "get": {
+        "operationId": "InvoiceTemplatesController_getDefaultTemplate",
+        "summary": "Get default template",
+        "description": "Retrieves the currently set default invoice template",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default template retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvoiceTemplateDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      }
+    },
+    "/api/v1/invoices-templates/{id}": {
+      "get": {
+        "operationId": "InvoiceTemplatesController_getTemplate",
+        "summary": "Get template by ID",
+        "description": "Retrieves a specific invoice template by its unique identifier",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvoiceTemplateDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found"
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      },
+      "put": {
+        "operationId": "InvoiceTemplatesController_updateTemplate",
+        "summary": "Update template",
+        "description": "Updates an existing invoice template.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Fields to update in the template. All fields are optional.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInvoiceTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvoiceTemplateDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid update data, duplicate template name, or invalid Content-Type"
+          },
+          "404": {
+            "description": "Template not found"
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      },
+      "delete": {
+        "operationId": "InvoiceTemplatesController_deleteTemplate",
+        "summary": "Delete template",
+        "description": "Deletes an invoice template. Cannot delete the default template.",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template deleted successfully"
+          },
+          "404": {
+            "description": "Template not found"
+          },
+          "409": {
+            "description": "Cannot delete the default template"
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      }
+    },
+    "/api/v1/invoices-templates/preview": {
+      "post": {
+        "operationId": "InvoiceTemplatesController_previewTemplate",
+        "summary": "Preview template",
+        "description": "Generates a preview of an invoice template with customizable data.\n    - Uses template ID to get layout and components\n    - Accepts optional preview data to customize all aspects of the preview\n    - Returns PDF buffer of preview invoice",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": true,
+            "in": "header",
+            "description": "Language for the PDF preview",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Template ID and optional preview data for customization",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template preview generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "PDF buffer of the preview invoice"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Missing template ID or invalid preview data"
+          },
+          "404": {
+            "description": "Template not found"
+          }
+        },
+        "tags": [
+          "Invoice Templates"
+        ]
+      }
+    },
+    "/api/v1/translations/{key}": {
+      "get": {
+        "operationId": "TranslationsController_getTranslation",
+        "summary": "Get translation for a specific key",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "description": "Translation key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": true,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Translation retrieved successfully"
+          },
+          "404": {
+            "description": "Translation not found"
+          }
+        },
+        "tags": [
+          "Translations"
+        ]
+      }
+    },
+    "/api/v1/addon": {
+      "post": {
+        "operationId": "AddonController_create",
+        "summary": "Create a new addon",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAddonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The addon has been successfully created."
+          },
+          "400": {
+            "description": "Bad Request."
+          }
+        },
+        "tags": [
+          "addon"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "AddonController_findAll",
+        "summary": "Get all addons",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all addons"
+          }
+        },
+        "tags": [
+          "addon"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/addon/{id}": {
+      "get": {
+        "operationId": "AddonController_findOne",
+        "summary": "Get a single addon by ID",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the specified addon"
+          },
+          "404": {
+            "description": "Addon not found"
+          }
+        },
+        "tags": [
+          "addon"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "AddonController_update",
+        "summary": "Update an addon",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAddonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Addon updated successfully"
+          },
+          "404": {
+            "description": "Addon not found"
+          }
+        },
+        "tags": [
+          "addon"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/addon/{id}/deactivate": {
+      "post": {
+        "operationId": "AddonController_deactivateAddon",
+        "summary": "Deactivate an addon and stop auto-renewal",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Addon deactivated successfully"
+          },
+          "400": {
+            "description": "Bad Request - Cannot deactivate non-renewable addon"
+          },
+          "404": {
+            "description": "Addon not found"
+          }
+        },
+        "tags": [
+          "addon"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/charges": {
+      "post": {
+        "operationId": "ChargesController_create",
+        "summary": "Create a new charge",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChargeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Charge created successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "ChargesController_findAll",
+        "summary": "Get all charges",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all charges"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/charges/by-entitlement/{entitlementCode}": {
+      "get": {
+        "operationId": "ChargesController_getChargesByEntitlementCode",
+        "summary": "Get all charges for a specific entitlement",
+        "parameters": [
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns charges for the entitlement"
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/charges/by-plan/{planCode}": {
+      "get": {
+        "operationId": "ChargesController_getChargesByPlanCode",
+        "summary": "Get all charges available for a plan",
+        "parameters": [
+          {
+            "name": "planCode",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns charges for the plan"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/charges/code/{chargeCode}": {
+      "get": {
+        "operationId": "ChargesController_findByChargeCode",
+        "summary": "Get a charge by its code",
+        "parameters": [
+          {
+            "name": "chargeCode",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the charge"
+          },
+          "404": {
+            "description": "Charge not found"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/charges/{id}": {
+      "get": {
+        "operationId": "ChargesController_findOne",
+        "summary": "Get a charge by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the charge"
+          },
+          "404": {
+            "description": "Charge not found"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "ChargesController_update",
+        "summary": "Update a charge",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChargeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Charge updated successfully"
+          },
+          "404": {
+            "description": "Charge not found"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "ChargesController_remove",
+        "summary": "Delete a charge and its associated billable metric",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charge deleted successfully"
+          },
+          "400": {
+            "description": "Bad Request - Cannot delete charge with active addons"
+          },
+          "404": {
+            "description": "Charge not found"
+          }
+        },
+        "tags": [
+          "charges"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billable-metric": {
+      "get": {
+        "operationId": "BillableMetricController_getAllBillableMetrics",
+        "summary": "Get All Billable Metrics",
+        "parameters": [
+          {
+            "name": "accept-language",
+            "required": false,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all available billable metrics"
+          }
+        },
+        "tags": [
+          "Billable Metric"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "BillableMetricController_createBillableMetric",
+        "summary": "Create new billable metric",
+        "description": "",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBillableMetricDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Creates a new Billable Metric",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBillableMetricDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "Billable Metric"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billable-metric/{code}": {
+      "get": {
+        "operationId": "BillableMetricController_getBillableMetricsByCode",
+        "summary": "Get Billable Metric by Code",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "The Code of the billable metrics",
+            "example": "storage",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": false,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all available billable metrics"
+          },
+          "404": {
+            "description": "Billable metrics not found"
+          }
+        },
+        "tags": [
+          "Billable Metric"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "BillableMetricController_updateBillableMetric",
+        "summary": "Update billable metric",
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "The Code of the billable metrics",
+            "example": "storage",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBillableMetricDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updates Billable Metric",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateBillableMetricDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "Billable Metric"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/plans": {
+      "get": {
+        "operationId": "PlansController_findAll",
+        "summary": "Get all plans",
+        "parameters": [
+          {
+            "name": "accept-language",
+            "required": false,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all available plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Plan"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      },
+      "post": {
+        "operationId": "PlansController_create",
+        "summary": "Create a new plan",
+        "description": "Create a new plan with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The plan has been successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePlanDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      }
+    },
+    "/api/v1/plans/{code}": {
+      "get": {
+        "operationId": "PlansController_findOne",
+        "summary": "Get a specific plan by Code",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "The Code of the plan",
+            "example": "iqraa_starter_monthly",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "required": false,
+            "in": "header",
+            "description": "Language code for the requested translation",
+            "schema": {
+              "enum": [
+                "ar",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      },
+      "delete": {
+        "operationId": "PlansController_delete",
+        "summary": "Delete a plan",
+        "description": "Delete a plan with the provided code.\n    \n    Note: This endpoint is restricted for internal use only.\n    Cannot delete plans with active subscriptions.",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "The Code of the plan to delete",
+            "example": "iqraa_starter_monthly",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The plan has been successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request - Cannot delete plan with active subscriptions"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      }
+    },
+    "/api/v1/plans/entitlement": {
+      "post": {
+        "operationId": "PlansController_addEntitlementToPlan",
+        "summary": "Add an entitlement to a plan",
+        "description": "Add an entitlement to a plan with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddEntitlementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The entitlement has been successfully added to the plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "Plans"
+        ]
+      }
+    },
+    "/api/v1/emails/send": {
+      "post": {
+        "operationId": "MailingController_sendEmail",
+        "summary": "Send an email",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The email has been successfully sent."
+          },
+          "400": {
+            "description": "Bad Request."
+          }
+        },
+        "tags": [
+          "Emails"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/webhooks/lago": {
+      "post": {
+        "operationId": "WebhooksController_handleLagoWebhook",
+        "summary": "Handle incoming Lago webhooks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Webhook processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid webhook signature"
+          },
+          "500": {
+            "description": "Failed to process webhook"
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/v1/user-configs/admin/metering-limit": {
+      "post": {
+        "operationId": "UserConfigController_addMeteringLimitAdmin",
+        "summary": "Admins add metering limit for any user",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMeteringLimitAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Add metering limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Added Metering Limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "UserConfigController_updateMeteringLimitAdmin",
+        "summary": "Admins update metering limit for any user",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeteringLimitAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated metering limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Updated Metering Limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "UserConfigController_deleteMeteringLimitAdmin",
+        "summary": "Admins delete metering limit for any user",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMeteringLimitAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deleted metering limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Deleted Metering Limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user-configs/customer/metering-limit": {
+      "post": {
+        "operationId": "UserConfigController_addMeteringLimitCustomer",
+        "summary": "Authenticated user add metering limit for any user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMeteringLimitCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Add metering limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Added Metering Limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "UserConfigController_updateMeteringLimitCustomer",
+        "summary": "Authenticated user update metering limit for any user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeteringLimitCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update metering limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Updated Metering Limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User Configs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  
+  "components": {
+    "schemas": {
+      "CreateNotificationConfigDto": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string",
+            "example": "trial_period_expiry",
+            "description": "Trial Period Expiry"
+          },
+          "timePeriod": {
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "description": "Time period for the event",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unit": {
+            "type": "string",
+            "example": "seconds",
+            "description": "Unit of measurement for the time period"
+          },
+          "templateName": {
+            "type": "string",
+            "example": "notificationservice-template-testing",
+            "description": "Name of the template"
+          },
+          "senderEmail": {
+            "type": "string",
+            "example": "sinan@razi.ai",
+            "description": "Sender email"
+          },
+          "senderName": {
+            "type": "string",
+            "example": "Sinan",
+            "description": "Sender Name"
+          },
+          "supportEmail": {
+            "type": "string",
+            "example": "sinan@razi.ai",
+            "description": "Support Email"
+          },
+          "productName": {
+            "type": "string",
+            "example": "Razi",
+            "description": "Product Name"
+          }
+        },
+        "required": [
+          "event",
+          "timePeriod",
+          "unit",
+          "templateName",
+          "senderEmail",
+          "senderName",
+          "supportEmail",
+          "productName"
+        ]
+      },
+       "UpdateNotificationConfigDto": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "example": "seconds",
+            "description": "Unit of measurement for the time period"
+          },
+          "timePeriod": {
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "description": "Time period for the event",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "templateName": {
+            "type": "string",
+            "example": "notificationservice-template-testing",
+            "description": "Name of the template"
+          },
+          "senderEmail": {
+            "type": "string",
+            "example": "Sinan",
+            "description": "Sender Name"
+          },
+          "senderName": {
+            "type": "string",
+            "example": "Sinan",
+            "description": "Sender Name"
+          },
+          "supportEmail": {
+            "type": "string",
+            "example": "sinan@razi.ai",
+            "description": "Support Email"
+          },
+          "productName": {
+            "type": "string",
+            "example": "Razi",
+            "description": "Product Name"
+          }
+        },
+        "required": [
+          "unit",
+          "timePeriod",
+          "templateName",
+          "senderEmail",
+          "senderName",
+          "supportEmail",
+          "productName"
+        ]
+      },
+      "CreatePaymentIntentDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The amount for the payment intent",
+            "example": 1000
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency for the payment intent",
+            "example": "AED"
+          },
+          "planCode": {
+            "type": "string",
+            "description": "The plan code associated with the payment intent (for subscriptions)",
+            "example": "PREMIUM_MONTHLY"
+          },
+          "seats": {
+            "type": "number",
+            "description": "Number of seats (for subscriptions)",
+            "example": 1
+          },
+          "userEmail": {
+            "type": "string",
+            "description": "The user email for the payment intent",
+            "example": "test@test.com"
+          },
+          "userName": {
+            "type": "string",
+            "description": "The user name for the payment intent",
+            "example": "John Doe"
+          },
+          "chargeCode": {
+            "type": "string",
+            "description": "The entitlement code for the addon",
+            "example": "EXTRA_STORAGE"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The quota amount for the addon",
+            "example": 100,
+            "minimum": 1
+          },
+          "isRenewable": {
+            "type": "boolean",
+            "description": "Whether the addon can be automatically renewed",
+            "example": true,
+            "default": false
+          }
+        },
+        "required": [
+          "amount",
+          "currency"
+        ]
+      },
+      "CreateSubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "planCode": {
+            "type": "string",
+            "description": "The code of the subscription plan",
+            "example": "PREMIUM_MONTHLY"
+          },
+          "isTrial": {
+            "type": "boolean",
+            "description": "Indicates if the subscription is a trial",
+            "example": true,
+            "default": false
+          },
+          "seats": {
+            "type": "number",
+            "description": "Number of seats",
+            "example": 1,
+            "nullable": true
+          },
+          "userEmail": {
+            "type": "string",
+            "description": "The email of the user",
+            "example": "john.doe@example.com"
+          },
+          "userName": {
+            "type": "string",
+            "description": "The name of the user",
+            "example": "John Doe"
+          }
+        },
+        "required": [
+          "planCode"
+        ]
+      },
+      "UpdateSubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "planCode": {
+            "type": "string",
+            "description": "The code of the subscription plan",
+            "example": "PREMIUM_MONTHLY"
+          },
+          "userEmail": {
+            "type": "string",
+            "description": "The email of the user",
+            "example": "john.doe@example.com"
+          },
+          "userName": {
+            "type": "string",
+            "description": "The name of the user",
+            "example": "John Doe"
+          }
+        },
+        "required": [
+          "planCode"
+        ]
+      },
+      "AddSeatsDto": {
+        "type": "object",
+        "properties": {
+          "seats": {
+            "type": "number",
+            "description": "Number of seats to add",
+            "example": 10
+          }
+        },
+        "required": [
+          "seats"
+        ]
+      },
+      "SubscriptionReportUsageDto": {
+        "type": "object",
+        "properties": {
+          "externalSubscriptionId": {
+            "type": "string",
+            "description": "Unique identifier of the subscription in your application",
+            "example": "0c7b0eb6-3411-4dd3-9e24-d2a8edbb504a"
+          },
+          "billableMetricCode": {
+            "type": "string",
+            "description": "Code that identifies a targeted billable metric",
+            "example": "storage"
+          },
+          "properties": {
+            "type": "object",
+            "example": {
+              "gb": 100
+            }
+          }
+        },
+        "required": [
+          "externalSubscriptionId",
+          "billableMetricCode",
+          "properties"
+        ]
+      },
+      "EntitlementReportUsageDto": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "description": "The unique identifier of the subscription",
+            "example": "0c7b0eb6-3411-4dd3-9e24-d2a8edbb504a"
+          },
+          "planId": {
+            "type": "string",
+            "description": "The identifier of the plan associated with the subscription",
+            "example": "plan_premium"
+          },
+          "customerSubscribedId": {
+            "type": "string",
+            "description": "The unique identifier of the customer who is subscribed (external customer id)",
+            "example": "247"
+          },
+          "entitlementCode": {
+            "type": "string",
+            "description": "The unique identifier of the entitlement",
+            "example": "STARTER"
+          },
+          "usage": {
+            "type": "number",
+            "description": "The usage amount to be reported",
+            "example": 100
+          }
+        },
+        "required": [
+          "subscriptionId",
+          "planId",
+          "entitlementCode",
+          "usage"
+        ]
+      },
+      "UsageInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "usage": {
+            "type": "number",
+            "example": 50,
+            "description": "Current usage of the entitlement"
+          },
+          "quota": {
+            "type": "number",
+            "example": 100,
+            "description": "Total quota for the entitlement"
+          }
+        },
+        "required": [
+          "usage",
+          "quota"
+        ]
+      },
+      "CreateBillingConfigDto": {
+        "type": "object",
+        "properties": {
+          "configKey": {
+            "oneOf": [
+              {
+                "enum": [
+                  "timing_policy"
+                ]
+              },
+              {
+                "type": "string",
+                "description": "Plan code for grace periods"
+              }
+            ],
+            "description": "Config key - either a type or plan code"
+          },
+          "configValue": {
+            "oneOf": [
+              {
+                "enum": [
+                  "immediate",
+                  "next_cycle"
+                ]
+              },
+              {
+                "type": "number",
+                "minimum": 0
+              }
+            ],
+            "description": "Config value - either a type or grace period days"
+          },
+          "configCategory": {
+            "type": "string",
+            "example": "upgrade",
+            "description": "Config key type (e.g. upgrade, downgrade, terminate)"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "description": "Status Type (e.g. active)"
+          },
+          "description": {
+            "type": "string",
+            "example": "Immediate Upgrade",
+            "description": "Description of the billing config"
+          }
+        },
+        "required": [
+          "configKey",
+          "configValue",
+          "configCategory",
+          "status",
+          "description"
+        ]
+      },
+      "UpdateBillingConfigDto": {
+        "type": "object",
+        "properties": {
+          "configValue": {
+            "oneOf": [
+              {
+                "enum": [
+                  "immediate",
+                  "next_cycle"
+                ]
+              },
+              {
+                "type": "number",
+                "minimum": 0
+              }
+            ],
+            "description": "Config value - either a type or grace period days"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive"
+            ],
+            "example": "active"
+          },
+          "description": {
+            "type": "string",
+            "example": "Immediate Upgrade",
+            "description": "Description of the billing config"
+          }
+        },
+        "required": [
+          "configValue",
+          "status",
+          "description"
+        ]
+      },
+      "InvoiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "FINALIZED",
+              "PAYMENT_FAILED",
+              "PAID",
+              "VOID"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "downloadLink": {
+            "type": "string"
+          },
+          "planType": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerEmail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "invoiceNumber",
+          "date",
+          "status",
+          "amount",
+          "currency",
+          "description",
+          "customerName",
+          "customerEmail"
+        ]
+      },
+      "CustomerInvoicesResponseDto": {
+        "type": "object",
+        "properties": {
+          "invoices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceResponseDto"
+            }
+          }
+        },
+        "required": [
+          "invoices"
+        ]
+      },
+       "LineItemDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of the line item",
+            "example": "Premium Plan Subscription"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Quantity of items",
+            "example": 1,
+            "minimum": 1
+          },
+          "unitPrice": {
+            "type": "number",
+            "description": "Price per unit",
+            "example": 99.99
+          },
+          "amount": {
+            "type": "number",
+            "description": "Total amount for this line item (quantity * unitPrice)",
+            "example": 99.99
+          }
+        },
+        "required": [
+          "description",
+          "quantity",
+          "unitPrice",
+          "amount"
+        ]
+      },
+      "CustomerDetailsDto": {
+        "type": "object",
+        "properties": {
+          "customerName": {
+            "type": "string",
+            "description": "Full name of the customer",
+            "example": "John Doe"
+          },
+          "customerEmail": {
+            "type": "string",
+            "description": "Email address of the customer",
+            "example": "john.doe@example.com"
+          },
+          "customerAddress": {
+            "type": "string",
+            "description": "Billing address of the customer",
+            "example": "123 Business Street, Suite 100"
+          },
+          "customerCity": {
+            "type": "string",
+            "description": "City of the customer",
+            "example": "San Francisco"
+          },
+          "customerCountry": {
+            "type": "string",
+            "description": "Country of the customer",
+            "example": "United States"
+          }
+        },
+        "required": [
+          "customerName",
+          "customerEmail"
+        ]
+      },
+      "InvoiceComponentsDto": {
+        "type": "object",
+        "properties": {
+          "lineItems": {
+            "description": "List of items being charged in this invoice",
+            "example": [
+              {
+                "description": "Premium Plan Subscription",
+                "quantity": 1,
+                "unitPrice": 99.99,
+                "amount": 99.99
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineItemDto"
+            }
+          },
+          "customerDetails": {
+            "description": "Customer billing information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerDetailsDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "lineItems",
+          "customerDetails"
+        ]
+      },
+      "CompanyDetails": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string"
+          },
+          "companyAddress": {
+            "type": "string",
+            "description": "The company address to display on the invoice",
+            "example": "123 Business Street, Suite 100, City, Country",
+            "maxLength": 255
+          },
+          "companyCity": {
+            "type": "string"
+          },
+          "companyCountry": {
+            "type": "string"
+          },
+          "companyEmail": {
+            "type": "string"
+          },
+          "vatNumber": {
+            "type": "string"
+          },
+          "logoUrl": {
+            "type": "string",
+            "description": "URL of the company logo to display on the invoice",
+            "example": "https://example.com/logo.png"
+          }
+        },
+        "required": [
+          "companyName",
+          "companyCity",
+          "companyCountry",
+          "companyEmail"
+        ]
+      },
+      "TaxSettings": {
+        "type": "object",
+        "properties": {
+          "rate": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "rate",
+          "label",
+          "enabled"
+        ]
+      },
+      "TemplateComponents": {
+        "type": "object",
+        "properties": {
+          "requiredFields": {
+            "type": "object",
+            "description": "Configure which fields are required in the invoice",
+            "example": {
+              "invoiceNumber": true,
+              "date": true,
+              "amount": true,
+              "customerDetails": true
+            }
+          },
+          "showCompanyDetails": {
+            "type": "boolean",
+            "description": "Show/hide company details section in the invoice",
+            "example": true
+          },
+          "showCustomerDetails": {
+            "type": "boolean",
+            "description": "Show/hide customer details section in the invoice",
+            "example": true
+          },
+          "showLineItems": {
+            "type": "boolean",
+            "description": "Show/hide line items section in the invoice",
+            "example": true
+          },
+          "showPaymentTerms": {
+            "type": "boolean",
+            "description": "Show/hide payment terms section in the invoice",
+            "example": true
+          },
+          "showFooter": {
+            "type": "boolean",
+            "description": "Show/hide footer section in the invoice",
+            "example": true
+          },
+          "showLogo": {
+            "type": "boolean",
+            "description": "Show/hide company logo in the invoice header",
+            "example": true
+          },
+          "companyDetails": {
+            "description": "Company information to be displayed on the invoice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyDetails"
+              }
+            ]
+          },
+          "taxSettings": {
+            "description": "Tax calculation settings for the invoice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaxSettings"
+              }
+            ]
+          }
+        },
+        "required": [
+          "requiredFields",
+          "showCompanyDetails",
+          "showCustomerDetails",
+          "showLineItems",
+          "showPaymentTerms",
+          "showFooter",
+          "showLogo",
+          "companyDetails",
+          "taxSettings"
+        ]
+      },
+      "CreateInvoiceTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Standard Template",
+            "description": "Unique name for the invoice template"
+          },
+          "components": {
+            "description": "Template components configuration that defines the invoice layout and content.\n    Includes:\n    - Required fields (invoiceNumber, date, amount, etc.)\n    - Display settings (company details, customer details, line items)\n    - Company information\n    - Tax settings\n    - Custom fields",
+            "example": {
+              "requiredFields": {
+                "invoiceNumber": true,
+                "date": true,
+                "amount": true,
+                "customerDetails": true
+              },
+              "showCompanyDetails": true,
+              "showCustomerDetails": true,
+              "showLineItems": true,
+              "showPaymentTerms": true,
+              "showFooter": true,
+              "showLogo": true,
+              "companyDetails": {
+                "companyName": "Company Name",
+                "companyAddress": "Company Address",
+                "companyCity": "City",
+                "companyCountry": "Country",
+                "companyEmail": "email@company.com",
+                "logoUrl": "https://example.com/logo.png",
+                "vatNumber": "123456789"
+              },
+              "taxSettings": {
+                "enabled": true,
+                "rate": 20,
+                "label": "VAT"
+              }
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TemplateComponents"
+              }
+            ]
+          },
+          "isDefault": {
+            "type": "boolean",
+            "default": false,
+            "description": "Set this template as the default template for new invoices"
+          }
+        },
+        "required": [
+          "name",
+          "components"
+        ]
+      },
+      "UpdateInvoiceTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Standard Template",
+            "description": "Unique name for the invoice template"
+          },
+          "components": {
+            "description": "Template components configuration that defines the invoice layout and content.\n    Includes:\n    - Required fields (invoiceNumber, date, amount, etc.)\n    - Display settings (company details, customer details, line items)\n    - Company information\n    - Tax settings\n    - Custom fields",
+            "example": {
+              "requiredFields": {
+                "invoiceNumber": true,
+                "date": true,
+                "amount": true,
+                "customerDetails": true
+              },
+              "showCompanyDetails": true,
+              "showCustomerDetails": true,
+              "showLineItems": true,
+              "showPaymentTerms": true,
+              "showFooter": true,
+              "showLogo": true,
+              "companyDetails": {
+                "companyName": "Company Name",
+                "companyAddress": "Company Address",
+                "companyCity": "City",
+                "companyCountry": "Country",
+                "companyEmail": "email@company.com",
+                "logoUrl": "https://example.com/logo.png",
+                "vatNumber": "123456789"
+              },
+              "taxSettings": {
+                "enabled": true,
+                "rate": 20,
+                "label": "VAT"
+              }
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TemplateComponents"
+              }
+            ]
+          },
+          "isDefault": {
+            "type": "boolean",
+            "default": false,
+            "description": "Set this template as the default template for new invoices"
+          }
+        }
+      },
+      "PreviewInvoiceData": {
+        "type": "object",
+        "properties": {
+          "invoiceNumber": {
+            "type": "string",
+            "description": "Custom invoice number for preview",
+            "example": "INV-2023-001"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the invoice",
+            "example": "Monthly subscription fee"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Total amount of the invoice",
+            "example": 99.99
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code for the invoice amount",
+            "example": "USD"
+          },
+          "planName": {
+            "type": "string",
+            "description": "Name of the subscription plan",
+            "example": "Premium Plan"
+          },
+          "customerName": {
+            "type": "string",
+            "description": "Name of the customer",
+            "example": "John Doe"
+          },
+          "customerEmail": {
+            "type": "string",
+            "description": "Email address of the customer",
+            "example": "john.doe@example.com"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Start date of the billing period",
+            "example": "2023-01-01T00:00:00Z"
+          },
+          "renewalDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Renewal date for the subscription",
+            "example": "2023-02-01T00:00:00Z"
+          },
+          "paymentTerms": {
+            "type": "number",
+            "description": "Number of days until payment is due",
+            "example": 30
+          }
+        }
+      },
+      "PreviewTemplateDto": {
+        "type": "object",
+        "properties": {
+          "templateId": {
+            "type": "string",
+            "description": "ID of the invoice template to preview",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "previewData": {
+            "description": "Preview data to customize the invoice preview",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PreviewInvoiceData"
+              }
+            ]
+          }
+        },
+        "required": [
+          "templateId"
+        ]
+      },
+      "CreateAddonDto": {
+        "type": "object",
+        "properties": {
+          "chargeId": {
+            "type": "string",
+            "description": "The ID of the charge",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "description": "The subscription ID this addon is associated with",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The quota amount for this addon",
+            "example": 100,
+            "minimum": 1
+          },
+          "isRenewable": {
+            "type": "boolean",
+            "description": "Whether the addon can be automatically renewed",
+            "example": true,
+            "default": false
+          }
+        },
+        "required": [
+          "chargeId",
+          "subscriptionId",
+          "quota",
+          "isRenewable"
+        ]
+      },
+      "UpdateAddonDto": {
+        "type": "object",
+        "properties": {
+          "chargeId": {
+            "type": "string",
+            "description": "The ID of the charge",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "description": "The subscription ID this addon is associated with",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The quota amount for this addon",
+            "example": 100,
+            "minimum": 1
+          },
+          "isRenewable": {
+            "type": "boolean",
+            "description": "Whether the addon can be automatically renewed",
+            "example": true,
+            "default": false
+          }
+        }
+      },
+      "CreateChargeDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the charge",
+            "example": "Extra Storage"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code identifier for the charge",
+            "example": "extra_storage"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the charge",
+            "example": "Additional storage space for your account"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The price of the charge",
+            "example": 1000,
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency for the charge",
+            "example": "USD"
+          },
+          "entitlementCode": {
+            "type": "string",
+            "description": "The entitlement code this charge is associated with",
+            "example": "EXTRA_STORAGE_ENTITLEMENT"
+          },
+          "billableMetricOverrides": {
+            "type": "object",
+            "description": "Optional overrides for billable metric configuration",
+            "example": {
+              "fieldName": "storage_gb",
+              "aggregatorType": "sum",
+              "description": "Total storage used in GB"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "code",
+          "amount",
+          "currency",
+          "entitlementCode"
+        ]
+      },
+      "UpdateChargeDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the charge",
+            "example": "Extra Storage"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code identifier for the charge",
+            "example": "extra_storage"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the charge",
+            "example": "Additional storage space for your account"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The price of the charge",
+            "example": 1000,
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency for the charge",
+            "example": "USD"
+          },
+          "entitlementCode": {
+            "type": "string",
+            "description": "The entitlement code this charge is associated with",
+            "example": "EXTRA_STORAGE_ENTITLEMENT"
+          },
+          "billableMetricOverrides": {
+            "type": "object",
+            "description": "Optional overrides for billable metric configuration",
+            "example": {
+              "fieldName": "storage_gb",
+              "aggregatorType": "sum",
+              "description": "Total storage used in GB"
+            }
+          }
+        }
+      },
+      "CreateBillableMetricDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Storage"
+          },
+          "code": {
+            "type": "string",
+            "example": "storage"
+          },
+          "description": {
+            "type": "string",
+            "example": "storage billable metric"
+          },
+          "recurring": {
+            "type": "boolean",
+            "example": false
+          },
+          "aggregatorType": {
+            "type": "string",
+            "enum": [
+              "count_agg",
+              "sum_agg",
+              "max_agg",
+              "unique_count_agg",
+              "weighted_sum_agg",
+              "latest_agg"
+            ],
+            "example": "sum_agg",
+            "description": "Billing Aggregator"
+          },
+          "fieldName": {
+            "type": "string",
+            "example": "gb",
+            "description": "aggregating usage data"
+          }
+        },
+        "required": [
+          "name",
+          "code",
+          "description",
+          "recurring",
+          "aggregatorType",
+          "fieldName"
+        ]
+      },
+      "UpdateBillableMetricDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Storage"
+          },
+          "description": {
+            "type": "string",
+            "example": "storage billable metric"
+          },
+          "recurring": {
+            "type": "boolean",
+            "example": false
+          },
+          "aggregatorType": {
+            "type": "string",
+            "enum": [
+              "count_agg",
+              "sum_agg",
+              "max_agg",
+              "unique_count_agg",
+              "weighted_sum_agg",
+              "latest_agg"
+            ],
+            "example": "sum_agg",
+            "description": "Billing Aggregator"
+          },
+          "fieldName": {
+            "type": "string",
+            "example": "gb",
+            "description": "aggregating usage data"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "recurring",
+          "aggregatorType",
+          "fieldName"
+        ]
+      },
+      "Plan": {
+        "type": "object",
+        "properties": {}
+      },
+      "ChargesDto": {
+        "type": "object",
+        "properties": {
+          "billable_metric_id": {
+            "type": "string",
+            "example": "storage"
+          },
+          "charge_model": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "graduated_percentage",
+              "package",
+              "percentage",
+              "volume",
+              "graduated"
+            ],
+            "example": "volume"
+          },
+          "invoiceable": {
+            "type": "boolean",
+            "example": true
+          },
+          "pay_in_advance": {
+            "type": "boolean",
+            "example": false
+          },
+          "properties": {
+            "type": "object",
+            "example": {
+              "volume_ranges": [
+                {
+                  "from_value": 0,
+                  "to_value": 100,
+                  "flat_amount": "0",
+                  "per_unit_amount": "0"
+                },
+                {
+                  "from_value": 101,
+                  "to_value": null,
+                  "flat_amount": "0",
+                  "per_unit_amount": "0.5"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "billable_metric_id",
+          "charge_model",
+          "invoiceable",
+          "pay_in_advance",
+          "properties"
+        ]
+      },
+      "CreatePlanDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Premium Plan"
+          },
+          "code": {
+            "type": "string",
+            "example": "iqraa_starter_monthly",
+            "description": "Unique code for the plan"
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "yearly",
+              "monthly"
+            ],
+            "example": "monthly",
+            "description": "Billing interval"
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD",
+            "description": "Currency code"
+          },
+          "amount": {
+            "type": "number",
+            "example": 99.99,
+            "minimum": 0,
+            "description": "Plan amount"
+          },
+          "trialPeriod": {
+            "type": "number",
+            "example": 14,
+            "minimum": 0,
+            "description": "Trial period in days"
+          },
+          "gracePeriod": {
+            "type": "number",
+            "example": 7,
+            "minimum": 0,
+            "description": "Grace period in days after subscription expiry"
+          },
+          "charges": {
+            "example": [
+              {
+                "billable_metric_id": "1a901a90-1a90-1a90-1a90-1a901a901a94",
+                "charge_model": "volume",
+                "invoiceable": true,
+                "pay_in_advance": false,
+                "properties": {
+                  "volume_ranges": [
+                    {
+                      "from_value": 0,
+                      "to_value": 100,
+                      "flat_amount": "0",
+                      "per_unit_amount": "0"
+                    },
+                    {
+                      "from_value": 101,
+                      "to_value": null,
+                      "flat_amount": "0",
+                      "per_unit_amount": "0.5"
+                    }
+                  ]
+                }
+              }
+            ],
+            "description": "Add multiple billable metrics in plan",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChargesDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "code",
+          "interval",
+          "currency",
+          "amount"
+        ]
+      },
+      "AddEntitlementDtoEntry": {
+        "type": "object",
+        "properties": {
+          "planCode": {
+            "type": "string",
+            "example": "specter_starter_monthly",
+            "description": "The Code of the plan"
+          },
+          "name": {
+            "type": "string",
+            "example": "Document Review",
+            "description": "The name of the entitlement"
+          },
+          "code": {
+            "type": "string",
+            "example": "SPECTER_DOCUMENT_REVIEW",
+            "description": "The code of the entitlement"
+          },
+          "description": {
+            "type": "string",
+            "example": "Document Review",
+            "description": "The description of the entitlement"
+          },
+          "isReportable": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the entitlement is reportable"
+          },
+          "quota": {
+            "type": "number",
+            "example": 1000,
+            "description": "The quota for the entitlement"
+          }
+        },
+        "required": [
+          "planCode",
+          "name",
+          "code",
+          "description",
+          "isReportable",
+          "quota"
+        ]
+      },
+      "AddEntitlementDto": {
+        "type": "object",
+        "properties": {
+          "planAndEntitlementQuotas": {
+            "description": "The list of plans and entitlements to add",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddEntitlementDtoEntry"
+            }
+          }
+        },
+        "required": [
+          "planAndEntitlementQuotas"
+        ]
+      },
+      "SendEmailDto": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "The recipient email address",
+            "example": "example@example.com"
+          },
+          "subject": {
+            "type": "string",
+            "description": "The subject of the email",
+            "example": "Welcome to our service"
+          },
+          "text": {
+            "type": "string",
+            "description": "The content of the email",
+            "example": "Hello, this is a welcome email."
+          }
+        },
+        "required": [
+          "to",
+          "subject",
+          "text"
+        ]
+      },
+      "AddMeteringLimitAdminDto": {
+        "type": "object",
+        "properties": {
+          "meteringLimit": {
+            "type": "number",
+            "example": 100
+          },
+          "customerId": {
+            "type": "string",
+            "example": "123"
+          }
+        },
+        "required": [
+          "meteringLimit",
+          "customerId"
+        ]
+      },
+      "AddMeteringLimitResDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AddMeteringLimitCustomerDto": {
+        "type": "object",
+        "properties": {
+          "meteringLimit": {
+            "type": "number",
+            "example": 100
+          }
+        },
+        "required": [
+          "meteringLimit"
+        ]
+      },
+      "UpdateMeteringLimitAdminDto": {
+        "type": "object",
+        "properties": {
+          "meteringLimit": {
+            "type": "number",
+            "example": 100
+          },
+          "customerId": {
+            "type": "string",
+            "example": "123"
+          }
+        },
+        "required": [
+          "meteringLimit",
+          "customerId"
+        ]
+      },
+      "UpdateMeteringLimitCustomerDto": {
+        "type": "object",
+        "properties": {
+          "meteringLimit": {
+            "type": "number",
+            "example": 100
+          }
+        },
+        "required": [
+          "meteringLimit"
+        ]
+      },
+      "DeleteMeteringLimitAdminDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "example": "123"
+          }
+        },
+        "required": [
+          "customerId"
+        ]
+      }
+    }
+  },
+  "x-original-swagger-version": "2.0"
+}

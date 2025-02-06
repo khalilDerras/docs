@@ -1,0 +1,145 @@
+---
+id: Payment
+title: Payment
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `Payment` component is designed to handle the payment process using Stripe. It initializes the Stripe instance, creates a payment intent, and displays the embedded checkout form. The component manages loading states, errors, and integrates with the `EmbeddedCheckoutForm` component to complete the payment.
+
+## Import
+
+```javascript
+import Payment from './path/to/Payment';
+```
+
+## Usage
+
+```jsx
+import React from 'react';
+import Payment from './components/Payment';
+
+const PaymentPage = () => {
+    return (
+        <div>
+            <h1>Checkout</h1>
+            <Payment />
+        </div>
+    );
+};
+
+export default PaymentPage;
+```
+
+### Component Code
+
+```jsx
+import React from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import useCreatePaymentIntent from "@/billing-ui/hooks/useCreatePaymentIntent";
+import { useBillingContext } from "@/billing-ui/context/BillingContext";
+import LoadingSpinner from "@/billing-ui/components/ui/LoadingSpinner";
+import Config from "@/billing-ui/config";
+import EmbeddedCheckoutForm from "@/billing-ui/components/core/EmbeddedCheckoutForm";
+import { loadStripe } from "@stripe/stripe-js";
+
+const Payment = () => {
+    const stripePromise = loadStripe(String(Config.STRIPE_PUBLIC_KEY), {
+        apiVersion: '2024-06-20',
+        betas: ['elements_customers_beta_1'],
+    });
+    const { selectedPlan, user, userToken } = useBillingContext();
+
+    if (!selectedPlan) return <div className="text-red-500">Please Select A Plan Before Proceeding With The Checkout!</div>;
+
+    const { clientSecret, paymentIntent, customerOptions, loading, error } = useCreatePaymentIntent({
+        amount: Number(selectedPlan?.price) || 0,
+        currency: String(selectedPlan?.currency),
+        planCode: selectedPlan.code
+    }, String(userToken));
+
+    if (loading) return <LoadingSpinner />;
+    if (error) return <div className="text-red-500">{error}</div>;
+
+    const appearance = {
+        theme: 'stripe',
+        variables: {
+            colorPrimary: '#0570de',
+            colorBackground: '#ffffff',
+            colorText: '#30313d',
+            colorDanger: '#df1b41',
+            fontFamily: 'Ideal Sans, system-ui, sans-serif',
+            spacingUnit: '2px',
+            borderRadius: '4px',
+        }
+    };
+
+    const loader = 'auto';
+
+    return (
+        <>
+            {clientSecret && stripePromise && (
+                <Elements
+                    stripe={stripePromise}
+                    options={{
+                        clientSecret: clientSecret!,
+                        loader,
+                        appearance,
+                        customerOptions
+                    }}
+                >
+                    <EmbeddedCheckoutForm paymentIntent={paymentIntent} />
+                </Elements>
+            )}
+        </>
+    );
+}
+
+export default Payment;
+```
+
+## Customization
+
+The `Payment` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the CSS classes and styles to change the appearance of the component.
+2. **Stripe Appearance**: Customize the Stripe Elements appearance by modifying the `appearance` object.
+3. **Error Handling**: Implement custom error handling logic to display more detailed error messages or retry mechanisms.
+4. **Loading States**: Customize the loading spinner or add additional loading indicators as needed.
+
+## Example Customization
+
+```jsx
+const CustomizedPayment = () => {
+    const customAppearance = {
+        theme: 'flat',
+        variables: {
+            colorPrimary: '#000000',
+            colorBackground: '#f0f0f0',
+            colorText: '#333333',
+            colorDanger: '#ff0000',
+            fontFamily: 'Arial, sans-serif',
+            spacingUnit: '4px',
+            borderRadius: '8px',
+        }
+    };
+
+    return (
+        <Payment appearance={customAppearance} />
+    );
+};
+
+export default CustomizedPayment;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `Payment` component into your page or parent component and include it in the JSX.
+- **Handle Loading and Errors**: Ensure to handle loading states and errors appropriately to provide a good user experience.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![Payment Component Screenshot](#)

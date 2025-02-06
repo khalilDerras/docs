@@ -1,0 +1,157 @@
+---
+id: PricingTable
+title: PricingTable
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `PricingTable` component displays a table of subscription plans using the `PlanCard` component for each plan. It includes functionality for handling subscriptions, contacting support, and starting trials. The component dynamically updates based on the provided plans and user subscription status.
+
+## Import
+
+```javascript
+import PricingTable from './path/to/PricingTable';
+```
+
+## Usage
+
+```jsx
+import React from 'react';
+import PricingTable from './components/PricingTable';
+import { Plan } from './types';
+
+const plans: Plan[] = [
+    // Define your plans here
+];
+
+const handleSubscribe = (plan: Plan) => {
+    console.log('Subscribe to plan:', plan);
+};
+
+const handleContactUs = () => {
+    console.log('Contact us for more details.');
+};
+
+const handleTrial = (planCode: string) => {
+    console.log('Start trial for plan:', planCode);
+};
+
+const PlansPage = () => {
+    return (
+        <div>
+            <h1>Our Plans</h1>
+            <PricingTable 
+                onSubscribe={handleSubscribe} 
+                onContactUs={handleContactUs} 
+                onTrial={handleTrial} 
+                plans={plans} 
+            />
+        </div>
+    );
+};
+
+export default PlansPage;
+```
+
+### Component Code
+
+```jsx
+import React from 'react';
+import PlanCard from '../modules/PlanCard';
+import { useRouter } from 'next/router';
+import { Plan } from '../../types';
+import { useBillingContext } from '@/billing-ui/context/BillingContext';
+
+interface PricingTableProps {
+    onSubscribe: (plan: Plan) => void;
+    onContactUs: () => void;
+    onTrial: (planCode: string) => void;
+    plans: Plan[];
+}
+
+const PricingTable: React.FC<PricingTableProps> = ({ onSubscribe, onContactUs, onTrial, plans }) => {
+    const { subscription } = useBillingContext();
+    const router = useRouter();
+
+    const handleContactUs = () => {
+        onContactUs();
+    };
+
+    const handleSubscribe = (plan: Plan) => {
+        if (onSubscribe) {
+            onSubscribe(plan);
+        } else {
+            router.push({
+                pathname: '/checkout',
+                query: {
+                    plan: JSON.stringify(plan),
+                },
+            });
+        }
+    };
+    return (
+        <div className="flex flex-shrink justify-center bg-background w-full h-full px-6 gap-4 my-6">
+            {plans.length > 0 && subscription ? (
+                plans.map((plan) => (
+                    <div key={plan.name} className='w-full flex-shrink'>
+                        <PlanCard
+                            plan={plan}
+                            onContactUs={handleContactUs}
+                            onSubscribe={() => handleSubscribe(plan)}
+                            onTrial={onTrial}
+                        />
+                    </div>
+                ))
+            ) : (
+                <div className="flex items-center justify-center w-full h-full">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default PricingTable;
+```
+
+## Customization
+
+The `PricingTable` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS classes to change the appearance of the layout and cards.
+2. **Plan Details**: Customize the `PlanCard` component to display additional plan details or features.
+3. **Error Handling**: Implement custom error handling logic for loading plans and handling subscriptions.
+4. **Animations**: Add custom animations or transitions to enhance the user experience.
+
+## Example Customization
+
+```jsx
+const CustomizedPricingTable = () => {
+    const customHandleSubscribe = (plan: Plan) => {
+        console.log("Custom subscribe to plan:", plan);
+    };
+
+    return (
+        <PricingTable 
+            onSubscribe={customHandleSubscribe} 
+            onContactUs={() => console.log("Custom contact us action")} 
+            onTrial={(planCode: string) => console.log("Custom start trial for plan:", planCode)} 
+            plans={customPlans} 
+        />
+    );
+};
+
+export default CustomizedPricingTable;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `PricingTable` component into your page or parent component and include it in the JSX.
+- **Handle Actions**: Ensure to provide logic for handling plan subscriptions, contacting support, and starting trials.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![PricingTable Component Screenshot](#)

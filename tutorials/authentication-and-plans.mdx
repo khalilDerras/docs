@@ -1,0 +1,46 @@
+---
+title: 'Authentication and Plans'
+icon: 'key'
+iconType: 'solid'
+description: 'Learn how to authenticate and retrieve billing plans'
+---
+<Warning>
+    The below authentication in all the flows related to the billing API is handled by the client backend app in same way above.
+</Warning>
+
+This guide explains the flow for authentication and retrieving billing plans using the Billing SDK.
+
+## Get Plans Flow
+
+<img src="/images/Billing-Setup.png" alt="Billing Setup Flow" />
+
+
+
+<Tip>
+    You can use the <Link href="/sdk/hooks/usebillingplans">useBillingPlans</Link> hook to retrieve the plans and entitlements.
+</Tip>
+
+<Steps>
+  <Step title="Client UI Initiates Request">
+    The client UI calls the `useBillingPlans` hook to trigger a call to the billing API.
+  </Step>
+  <Step title="Billing API Validates Session">
+    The billing API queries the client backend app to check the validity of the session and retrieve user details.
+  </Step>
+  <Step title="Return error to client if session is not valid">
+   If the session is not valid, the billing API will return an error to the client UI.
+  </Step>
+  <Step title="Billing API Queries Lago">
+    If session is valid then based on the user details, the billing API queries Lago to return the plans for the user. Currently, all plans are fixed for each client.
+  </Step>
+  <Step title="Lago Returns Plans">
+    Lago returns the relevant plans to the billing API.
+  </Step>
+  <Step title="Billing API Responds to Client">
+    The billing API forwards the plans back to the client UI. The `useBillingPlans` hook receives the response, which includes the plans and any potential errors.
+  </Step>
+</Steps>
+
+<Tip>
+    You can use the <Link href="/sdk/hooks/usebillingplans">useBillingPlans</Link> hook to retrieve the plans and entitlements.
+</Tip>

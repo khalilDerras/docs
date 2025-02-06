@@ -1,0 +1,50 @@
+---
+title: 'Setup Integration'
+icon: 'wrench'
+iconType: 'solid'
+---
+
+In this section, we will setup the integration for the billing service. We will create a new integration and add the necessary details to the integration.
+
+<Steps>
+    <Step title="Initiate the UI to access the user token and org id">
+        Our Billing [SDK](/sdk/hooks/useBillingPlans) expects the user token and org id to be passed to it. This is used to validate the user session and the organization session.
+        <Note>
+            We are in progress of adding support of org id. We will update this section once we have added support of org id.
+        </Note>
+    </Step>
+  <Step title="Setup an authentication endpoint in your application">
+    Our Billing API requires an authentication endpoint in your application that will be used to validate the user session.
+
+    For more information on how the authentication works, please refer to the [Authentication and Authorization](/tutorials/authentication-and-plans) section.
+    <Note>
+      This endpoint should be a private endpoint which can accept the user session token of your application and validate it, and then return the user information.
+
+      Expected Request Headers:
+      ```json
+      {
+        "Authorization": "Bearer user_token",
+        "X-Org-Id": "org_id"
+      }
+      ```
+      Expected Response if user is authenticated and belong to the organization:
+      ```json
+      {
+        "id": "user_id",
+        "email": "user_email@gmail.com",
+        "name": "user_name"
+      }
+      ```
+      Expected Response if user is not authenticated or does not belong to the organization:
+      Http status code: 401
+      ```json
+      {
+        "error": "Unauthorized"
+      }
+      ```
+
+      This ensures that the user information is validated and the user is authenticated by your service.
+    </Note>
+  </Step>
+  
+</Steps>

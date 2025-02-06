@@ -1,0 +1,124 @@
+---
+id: useBillingPlans
+title: useBillingPlans
+icon: react
+iconType: solid
+---
+
+#### Overview
+
+The `useBillingPlans` hook is a custom React hook designed to fetch, filter, and manage billing plans for a subscription-based service. It provides an easy way to retrieve billing plans based on authentication and billing cycle preferences.
+
+
+#### Usage
+
+```jsx
+const { plans, loading, error } = useBillingPlans(authToken, cycle, billingCycles, enterprisePlanName);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `cycle` (string, optional): The billing cycle to filter plans. Defaults to `BILLING_CYCLES.MONTHLY`.
+- `billingCycles` (string, required): The billing cycle to filter plans. Defaults to `BILLING_CYCLES.MONTHLY`. Enum Values are `BILLING_CYCLES.MONTHLY` and `BILLING_CYCLES.YEARLY`.
+- `enterprisePlanName` (string, required): The enterprise plan name to filter plans. Expected value is `ENTERPRISE_PLAN_NAME`.
+
+##### Returns
+
+An object with the following properties:
+
+- `plans` (Array[Plan]): An array of billing plans filtered by the specified cycle.
+- `loading` (boolean): Indicates whether the plans are currently being fetched.
+- `error` (string | null): Contains an error message if an error occurred during fetching, otherwise null.
+
+#### Plan Object Structure
+
+Each plan in the `plans` array has the following structure:
+
+```typescript
+interface Plan {
+  name: string;
+  code: string;
+  price: number;
+  amount: string;
+  currency: string;
+  description: string;
+  entitlements: any;
+  buttonText: string;
+  billingCycle: string;
+  isRecommended: boolean;
+  perUser: boolean;
+  trialPeriod: string;
+}
+```
+
+#### Example
+
+```jsx
+import React from 'react';
+import useBillingPlans from './useBillingPlans';
+import { BILLING_CYCLES } from '../types';
+
+const BillingPlansComponent = ({ authToken }) => {
+  const { plans, loading, error } = useBillingPlans(authToken, BILLING_CYCLES.YEARLY, BILLING_CYCLES.YEARLY, ENTERPRISE_PLAN_NAME);
+
+  if (loading) return <div>Loading plans...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div>
+      <h2>Available Plans</h2>
+      {plans.map(plan => (
+        <div key={plan.code}>
+          <h3>{plan.name}</h3>
+          <p>{plan.description}</p>
+          <p>Price: {plan.amount}</p>
+          <button>{plan.buttonText}</button>
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/plans`
+- Method: GET
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+
+#### Error Handling
+
+If an error occurs during the API call, the `error` state will be set to 'Failed to fetch plans'. You should handle this in your component to display an appropriate error message to the user.
+
+#### Performance Considerations
+
+- The hook uses `useMemo` to optimize performance by only recalculating filtered plans when the cycle or plans change.
+- API calls are made only once when the component mounts or when the `authToken` changes, preventing unnecessary requests.
+
+#### Customization
+
+The `CURRENCIES_MAPPING` object can be modified to support additional currencies:
+
+```javascript
+const CURRENCIES_MAPPING = {
+  "USD": "$",
+  "EUR": "€",
+  "GBP": "£",
+  "AED": "AED"
+  // Add more currencies as needed
+}
+```
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+- `BILLING_CYCLES` and `ENTERPRISE_PLAN_NAME` constants from a `types` file
+
+Ensure these dependencies are properly set up in your project for the hook to function correctly.

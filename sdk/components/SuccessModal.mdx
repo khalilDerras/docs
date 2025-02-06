@@ -1,0 +1,148 @@
+---
+id: SuccessModal
+title: SuccessModal
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `SuccessModal` component displays a modal to inform the user that their subscription plan is now active. It includes details about the active plan and its entitlements, and provides a button to close the modal and continue using the application.
+
+## Import
+
+```javascript
+import SuccessModal from './path/to/SuccessModal';
+```
+
+## Usage
+
+```jsx
+import React, { useState } from 'react';
+import SuccessModal from './components/SuccessModal';
+
+const App = () => {
+    const [isModalOpen, setIsModalOpen] = useState(true);
+
+    const handleClose = () => {
+        setIsModalOpen(false);
+    };
+
+    return (
+        <div>
+            {isModalOpen && <SuccessModal onClose={handleClose} />}
+        </div>
+    );
+};
+
+export default App;
+```
+
+### Component Code
+
+```jsx
+import React from 'react';
+import Image from 'next/image';
+import CheckIcon from '../../assets/images/icons/check_black.svg';
+import VectorIcon from '../../assets/images/icons/vector.svg';
+import { useBillingContext } from '@/billing-ui/context/BillingContext';
+import useSubscription from '@/billing-ui/hooks/useSubscription';
+import useBillingPlans from '@/billing-ui/hooks/useBillingPlans';
+import { BASIC_PLAN_NAME, BILLING_CYCLES, PRO_PLAN_NAME } from '../../types';
+
+interface SuccessModalProps {
+    onClose: () => void;
+}
+
+const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
+    const { userToken } = useBillingContext();
+    const { subscription, loading: subscriptionLoading } = useSubscription(String(userToken)) as any;
+    const isMonthly = subscription?.plan?.interval === BILLING_CYCLES.MONTHLY;
+    const { plans, loading: plansLoading } = useBillingPlans(String(userToken), isMonthly ? BILLING_CYCLES.MONTHLY : BILLING_CYCLES.YEARLY);
+    const currentPlan = plans.find((plan: any) => plan.name === subscription?.plan?.name);
+
+    const isLoading = subscriptionLoading || plansLoading;
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto flex flex-col items-center">
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-4">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+                    </div>
+                ) : (
+                    <>
+                        <Image src={VectorIcon} alt='App Logo' width={100} height={100} className="mb-10 mt-10" />
+                        <h2 className="text-xl font-bold mb-8 text-gray-800 items-center justify-center">
+                            🥳 Your {subscription?.plan?.name} Plan is Now Active
+                        </h2>
+                        <p className="text-gray-800 mb-8 justify-center">
+                            Thank you for your purchase! Your new {subscription?.plan?.name} plan is now active and ready to use.
+                        </p>
+                        <p className="mb-4 mt-4 text-left text-xl font-medium leading-7 text-textPrimary">What you will get</p>
+                        <ul className="mb-8 space-y-3">
+                            {subscription?.plan?.name === PRO_PLAN_NAME && (
+                                <li key={currentPlan?.entitlements.length} className="flex text-3sm items-center justify-center text-gray-600">
+                                    <div className={`flex items-center justify-center rounded-full px-2 py-1`}>
+                                        <Image src={CheckIcon} alt="icon" className="mr-1 w-4 h-4" />
+                                        <span className="text-sm">{BASIC_PLAN_NAME} +</span>
+                                    </div>
+                                </li>
+                            )}
+                            {currentPlan?.entitlements.map((entitlement: any, index: any) => (
+                                <li key={index} className="flex text-3sm items-center justify-center text-gray-600">
+                                    <div className={`flex items-center justify-center rounded-full px-2 py-1`}>
+                                        <Image src={CheckIcon} alt="icon" className="mr-1 w-4 h-4" />
+                                        <span className="text-sm">{entitlement.quota} {entitlement.name}</span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )}
+                <button className="bg-primary w-full py-3 rounded-lg" onClick={onClose}>
+                    Continue using Specter
+                </button>
+                <div className="mt-6 text-sm text-gray-500">Ts&Cs apply</div>
+            </div>
+        </div>
+    );
+}
+
+export default SuccessModal;
+```
+
+## Customization
+
+The `SuccessModal` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS classes to change the appearance of the modal and its elements.
+2. **Plan Details**: Customize the displayed plan details and entitlements to better fit your application's needs.
+3. **Loading Indicator**: Change the loading indicator to match your application's design.
+4. **Icons**: Change the success and vector icons to fit the branding of your application.
+
+## Example Customization
+
+```jsx
+const CustomizedSuccessModal = () => {
+    const handleCustomClose = () => {
+        console.log("Custom close action");
+    };
+
+    return (
+        <SuccessModal onClose={handleCustomClose} />
+    );
+};
+
+export default CustomizedSuccessModal;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `SuccessModal` component into your page or parent component and include it in the JSX.
+- **Handle Actions**: Ensure to provide logic for closing the modal and any other actions required.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![SuccessModal Component Screenshot](#)

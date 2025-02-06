@@ -1,0 +1,142 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Billing/Payment Docs",
+  "logo": {
+    "dark": "/logo/locai-light-logo.svg",
+    "light": "/logo/locai-logo.svg"
+  },
+  "favicon": "/images/favicon.png",
+  "metadata": {
+    "og:title": "Billing/Payment Docs",
+    "og:image": "/images/favicon.png",
+    "og:description": "Docs for Billing Service related modules",
+    "og:logo": "/logo/locai-logo.svg"
+  },
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "theme": "prism",
+  "anchors": [
+    {
+      "name": "Slack",
+      "icon": "slack",
+      "iconType": "solid",
+      "url": "https://locai-workspace.slack.com/archives/C07HH8ERYHG"
+    },
+    {
+      "name": "Contribute",
+      "icon": "code-pull-request",
+      "iconType": "solid",
+      "url": "https://github.com/LocAI1/Billing/pulls"
+    },
+    {
+      "name": "Feature Request / Issues",
+      "icon": "scrubber",
+      "iconType": "regular",
+      "url": "https://github.com/LocAI1/Billing/issues"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "API Playground",
+    "arrow": true,
+    "url": "https://dev-billing-api.iqraa.ai/playground"
+  },
+  "tabs": [
+    {
+      "name": "Features",
+      "url": "/"
+    },
+    {
+      "name": "Tutorial",
+      "url": "/tutorials"
+    },
+    {
+      "name": "React SDK",
+      "url": "/sdk"
+    },
+    {
+      "name": "Billing API Reference",
+      "url": "billing-api-reference",
+      "openapi": "/specs/billing_api_docs.json"
+    },
+    {
+      "name": "Entitlements API Reference",
+      "url": "entitlements-api-reference",
+      "openapi": "/specs/entitlements_api_docs.json"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "icon": "rocket",
+      "iconType": "solid",
+      "pages": [
+        "introduction"
+      ]
+    },
+    {
+      "group": "Tutorial",
+      "icon": "book",
+      "iconType": "solid",
+      "pages": [
+        "tutorials/introduction",
+        "tutorials/setup-integration",
+        "tutorials/authentication-and-plans",
+        "tutorials/entitlements-usage",
+        "tutorials/payment-flow"
+      ]
+    },
+    {
+      "group": "React SDK",
+      "pages": [
+        "sdk/intro",
+        "sdk/quickstart",
+        "sdk/setup",
+        "sdk/usage",
+        {
+          "group": "Components",
+          "icon": "cubes",
+          "iconType": "solid",
+          "pages": [
+            "sdk/components/BillingLayout",
+            "sdk/components/PricingTable",
+            "sdk/components/ManagePlans",
+            "sdk/components/Payment",
+            "sdk/components/EmbeddedCheckoutForm",
+            "sdk/components/ManageBilling",
+            "sdk/components/BillingModal",
+            "sdk/components/ContactModal",
+            "sdk/components/EntitlementUsageLimitModal",
+            "sdk/components/SuccessModal",
+            "sdk/components/UpgradeModal"
+          ]
+        },
+        {
+          "group": "Hooks",
+          "icon": "plug",
+          "iconType": "solid",
+          "pages": [
+            "sdk/hooks/useBillingContext",
+            "sdk/hooks/useBillingPlans",
+            "sdk/hooks/useCreatePaymentIntent",
+            "sdk/hooks/useCreateSubscription",
+            "sdk/hooks/useIsUserEntitledTo",
+            "sdk/hooks/useSendEmail",
+            "sdk/hooks/useSubscription",
+            "sdk/hooks/useUpdateSubscription"
+          ]
+        }
+      ]
+    }
+  ],
+  "footerSocials": {
+    "linkedin": "https://www.linkedin.com/company/locai",
+    "github": "https://github.com/LocAI1/Billing"
+  }
+}

@@ -1,0 +1,155 @@
+---
+id: BillingModal
+title: BillingModal
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `BillingModal` component is a modal window that allows users to select a subscription plan. It integrates with the `PricingTable` component and includes a toggle button to switch between monthly and yearly billing cycles.
+
+## Import
+
+```javascript
+import BillingModal from './path/to/BillingModal';
+```
+
+## Usage
+
+```jsx
+import React, { useState } from 'react';
+import BillingModal from './components/BillingModal';
+import { Plan } from './types';
+
+const App = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleSelectPlan = (plan: Plan | null) => {
+        console.log('Selected plan:', plan);
+        setIsModalOpen(false);
+    };
+
+    const handleContactUs = () => {
+        console.log('Contact us for more details.');
+    };
+
+    const handleTrial = (planCode: string) => {
+        console.log('Start trial for plan:', planCode);
+    };
+
+    return (
+        <div>
+            <button onClick={() => setIsModalOpen(true)}>Open Billing Modal</button>
+            {isModalOpen && (
+                <BillingModal
+                    onSelectPlan={handleSelectPlan}
+                    onContactUs={handleContactUs}
+                    onTrial={handleTrial}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
+        </div>
+    );
+};
+
+export default App;
+```
+
+### Component Code
+
+```jsx
+import React, { useState } from 'react';
+import { BILLING_CYCLES, Plan } from '../../types';
+import PricingTable from '../core/PricingTable';
+import ToggleButton from '../ui/ToggleButton';
+import useBillingPlans from '@/billing-ui/hooks/useBillingPlans';
+import { useBillingContext } from '@/billing-ui/context/BillingContext';
+import CloseIcon from '../../assets/images/icons/close.svg';
+import Image from 'next/image';
+
+interface BillingModalProps {
+    onSelectPlan: (plan: Plan | null) => void;
+    onContactUs: () => void;
+    onTrial: (planCode: string) => void;
+    onClose: () => void;
+}
+
+const BillingModal: React.FC<BillingModalProps> = ({ onSelectPlan, onContactUs, onTrial, onClose }) => {
+    const { userToken } = useBillingContext();
+    const [isMonthly, setIsMonthly] = useState(true);
+    const { plans } = useBillingPlans(
+        String(userToken),
+        isMonthly ? BILLING_CYCLES.MONTHLY : BILLING_CYCLES.YEARLY
+    );
+
+    const handleToggle = (cycle: string) => {
+        setIsMonthly(cycle === BILLING_CYCLES.MONTHLY);
+    };
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-xl z-50 py-7">
+            <div className="relative flex flex-col items-center bg-white rounded-3xl shadow-lg p-8">
+                <button onClick={onClose} className="absolute top-3 right-3" aria-label="Close modal">
+                    <Image src={CloseIcon} alt="Close" width={24} height={24} />
+                </button>
+                <div className="flex flex-col items-center mb-6">
+                    <h2 className="text-center font-extrabold text-textPrimary text-2xl mt-2">Choose your Plan</h2>
+                    <p className="text-center text-textTertiary mt-2 text-sm">
+                        Select from the best plan, ensuring a perfect match. Need more or less? Customize your
+                        subscription for a seamless fit!
+                    </p>
+                    <ToggleButton
+                        cycles={[BILLING_CYCLES.MONTHLY, BILLING_CYCLES.YEARLY]}
+                        onToggle={handleToggle}
+                        activeCycle={isMonthly ? BILLING_CYCLES.MONTHLY : BILLING_CYCLES.YEARLY}
+                    />
+                </div>
+                <PricingTable onSubscribe={onSelectPlan} onContactUs={onContactUs} onTrial={onTrial} plans={plans} />
+            </div>
+        </div>
+    );
+};
+
+export default BillingModal;
+```
+
+## Customization
+
+The `BillingModal` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS classes to change the appearance of the modal and its elements.
+2. **Plan Details**: Customize the `PricingTable` component to display additional plan details or features.
+3. **Toggle Button**: Customize the `ToggleButton` component to support more billing cycles or different toggle styles.
+4. **Close Button**: Change the close button icon and style to fit the design of your application.
+
+## Example Customization
+
+```jsx
+const CustomizedBillingModal = () => {
+    const customHandleSelectPlan = (plan: Plan | null) => {
+        console.log("Custom selected plan:", plan);
+    };
+
+    return (
+        <BillingModal
+            onSelectPlan={customHandleSelectPlan}
+            onContactUs={() => console.log("Custom contact us action")}
+            onTrial={(planCode: string) => console.log("Custom start trial for plan:", planCode)}
+            onClose={() => console.log("Custom close modal action")}
+        />
+    );
+};
+
+export default CustomizedBillingModal;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `BillingModal` component into your page or parent component and include it in the JSX.
+- **Handle Actions**: Ensure to provide logic for handling plan selection, contacting support, and starting trials.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![BillingModal Component Screenshot](#)

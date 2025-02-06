@@ -1,0 +1,88 @@
+---
+id: useCreatePaymentIntent
+title: useCreatePaymentIntent
+icon: react
+iconType: solid
+---
+
+
+#### Overview
+
+The `useCreatePaymentIntent` hook is a custom React hook designed to create a payment intent using an API endpoint. It handles the creation process, manages loading and error states, and provides the client secret, payment intent, and customer options.
+
+
+#### Usage
+
+```jsx
+const { clientSecret, paymentIntent, customerOptions, loading, error } = useCreatePaymentIntent(payload, authToken);
+```
+
+##### Parameters
+
+- `payload` (object, required): An object containing the payment details.
+  - `amount` (number): The amount for the payment.
+  - `currency` (string): The currency code for the payment.
+  - `planCode` (string): The code of the plan associated with the payment.
+- `authToken` (string, required): The authentication token for API requests.
+
+##### Returns
+
+An object with the following properties:
+
+- `clientSecret` (string | null): The client secret for the payment intent.
+- `paymentIntent` (object): The payment intent object returned by the API.
+- `customerOptions` (object): Customer options related to the payment intent.
+- `loading` (boolean): Indicates whether the payment intent is currently being created.
+- `error` (string | null): Contains an error message if an error occurred during the process, otherwise null.
+
+#### Example
+
+```jsx
+import React from 'react';
+import useCreatePaymentIntent from './useCreatePaymentIntent';
+
+const PaymentComponent = ({ authToken }) => {
+    const payload = { amount: 1000, currency: 'USD', planCode: 'PLAN123' };
+    const { clientSecret, paymentIntent, customerOptions, loading, error } = useCreatePaymentIntent(payload, authToken);
+
+    if (loading) return <div>Creating payment intent...</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    return (
+        <div>
+            <h2>Payment Intent Created</h2>
+            <p>Client Secret: {clientSecret}</p>
+            <p>Payment Intent: {JSON.stringify(paymentIntent)}</p>
+            <p>Customer Options: {JSON.stringify(customerOptions)}</p>
+        </div>
+    );
+};
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/payments`
+- Method: POST
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+- Body: JSON string containing `amount`, `currency`, and `planCode`
+
+#### Error Handling
+
+If an error occurs during the API call, the `error` state will be set to the error message. You should handle this in your component to display an appropriate error message to the user.
+
+#### Performance Considerations
+
+- The hook uses `useEffect` to create the payment intent when the component mounts or when the `amount` changes.
+- The API call is made only once per mount or when the `amount` changes, preventing unnecessary requests.
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+
+Ensure this dependency is properly set up in your project for the hook to function correctly.

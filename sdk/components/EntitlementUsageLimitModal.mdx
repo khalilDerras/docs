@@ -1,0 +1,117 @@
+---
+id: EntitlementUsageLimitModal
+title: EntitlementUsageLimitModal
+icon: react
+iconType: solid
+---
+
+## Overview
+
+The `EntitlementUsageLimitModal` component displays a modal when a user reaches their usage limit for a specific entitlement. It provides information about the entitlement and prompts the user to upgrade their plan if necessary.
+
+## Import
+
+```javascript
+import EntitlementUsageLimitModal from './path/to/EntitlementUsageLimitModal';
+```
+
+## Usage
+
+```jsx
+import React from 'react';
+import EntitlementUsageLimitModal from './components/EntitlementUsageLimitModal';
+
+const App = () => {
+    return (
+        <div>
+            <h1>My Application</h1>
+            <EntitlementUsageLimitModal />
+        </div>
+    );
+};
+
+export default App;
+```
+
+### Component Code
+
+```jsx
+import React from 'react';
+import { useBillingContext } from '@/billing-ui/context/BillingContext';
+import Button from '../ui/Button';
+import logoIcon from '@/billing-ui/assets/images/icons/logo.svg';
+import Image from 'next/image';
+import useSubscription from '@/billing-ui/hooks/useSubscription';
+import { BILLING_CYCLES } from '@/billing-ui/types';
+import useBillingPlans from '@/billing-ui/hooks/useBillingPlans';
+
+const EntitlementUsageLimitModal: React.FC = () => {
+    const { entitlementCode, userToken, closeEntitlementUsageLimitModal } = useBillingContext();
+    const { subscription, loading: subscriptionLoading } = useSubscription(String(userToken)) as any;
+    const isMonthly = subscription?.plan?.interval === BILLING_CYCLES.MONTHLY;
+    const { plans, loading: plansLoading } = useBillingPlans(String(userToken), isMonthly ? BILLING_CYCLES.MONTHLY : BILLING_CYCLES.YEARLY);
+    const currentPlan = plans.find((plan: any) => plan.name === subscription?.plan?.name);
+    const entitlement = currentPlan?.entitlements.find((entitlement: any) => entitlement.code === entitlementCode);
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-xl z-50 py-7">
+            <div className="bg-white p-6 rounded-md shadow-md text-center">
+                <div className="mb-4">
+                    <Image src={logoIcon} alt="logo" width={40} height={40} />
+                </div>
+                <h2 className="text-xl font-semibold mb-2">Upgrade to {entitlement?.name}</h2>
+                <p className="text-gray-600 mb-4">
+                    {subscription?.plan?.name === 'Basic'
+                        ? `You have reached your monthly limit of ${entitlement?.quota} ${entitlement?.name}. Upgrade now for continued usage.`
+                        : `You have reached your monthly limit of ${entitlement?.quota} ${entitlement?.name}.`}
+                </p>
+                {subscription?.plan?.name === 'Basic' && (
+                    <Button text="Upgrade Plan" onClick={() => console.log('Upgrade Plan Clicked')} />
+                )}
+                <p className="text-xs text-gray-400 mt-4">*T&C apply</p>
+                <button onClick={closeEntitlementUsageLimitModal} className="mt-4 text-primary">Close</button>
+            </div>
+        </div>
+    );
+};
+
+export default EntitlementUsageLimitModal;
+```
+
+## Customization
+
+The `EntitlementUsageLimitModal` component can be customized in various ways to fit different requirements:
+
+1. **Styles and Classes**: Modify the Tailwind CSS classes to change the appearance of the modal and its elements.
+2. **Button Actions**: Customize the actions taken when the "Upgrade Plan" button is clicked.
+3. **Content**: Modify the text content to better suit the application's context and user messaging.
+4. **Icons**: Change the logo and other icons to fit the branding of your application.
+
+## Example Customization
+
+```jsx
+const CustomizedEntitlementUsageLimitModal = () => {
+    const handleUpgradeClick = () => {
+        console.log("Custom upgrade plan action");
+        // Custom logic here
+    };
+
+    return (
+        <EntitlementUsageLimitModal
+            onUpgradeClick={handleUpgradeClick}
+        />
+    );
+};
+
+export default CustomizedEntitlementUsageLimitModal;
+```
+
+## Usage Guide
+
+- **Import and Use**: Import the `EntitlementUsageLimitModal` component into your page or parent component and include it in the JSX.
+- **Handle Actions**: Ensure to provide logic for handling plan upgrades and closing the modal.
+- **Customization**: Leverage the customization options to fit the component into your application's design and functionality requirements.
+
+## Placeholder for Images
+
+![EntitlementUsageLimitModal Component Screenshot](#)

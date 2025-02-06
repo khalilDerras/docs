@@ -1,0 +1,429 @@
+---
+id: useBillingContext
+title: useBillingContext
+icon: react
+iconType: solid
+---
+
+
+## Overview
+
+The `useBillingContext` hook provides access to the billing context within your application. This context includes various billing-related states and functions that help manage user subscriptions, plans, and modal visibility.
+
+## Import
+
+```javascript
+import { useBillingContext } from '@locai1/billing-react-sdk';
+```
+
+## Usage
+
+### Example
+
+```jsx
+import React from 'react';
+import { useBillingContext } from '@locai1/billing-react-sdk';
+
+const YourComponent = () => {
+    const {
+        userToken, setUserToken,
+        user, setUser,
+        selectedPlan, setSelectedPlan,
+        plans, customer, setCustomer,
+        isMonthly, toggleBillingCycle,
+        showUpgradeModal, setShowUpgradeModal,
+        showFreeTrialButton, setShowFreeTrialButton,
+        isBillingModalOpen, setIsBillingModalOpen,
+        showContactModal, setShowContactModal,
+        showSuccessModal, setShowSuccessModal,
+        closeEntitlementUsageLimitModal, setShowWelcomeModal,
+        showWelcomeModal, handleSelectPlan, handleContactUs,
+        handleSubmitContactUsForm, closeSuccessModal,
+        closeContactModal, closeUpgradeModal,
+        closeBillingModal, handleUpgrade,
+        handleSuccess, handleTrial,
+        subscription, setSubscription,
+        showEntitlementLimitModal, setShowEntitlementLimitModal
+    } = useBillingContext();
+
+    // Your component logic here
+};
+```
+
+## Provided Values
+
+The `useBillingContext` hook provides a variety of values and functions. Below is a detailed list along with usage examples for each.
+
+### `userToken`
+
+The authentication token for the user.
+
+```jsx
+const { userToken } = useBillingContext();
+console.log(userToken);
+```
+
+### `setUserToken`
+
+Function to set the authentication token for the user.
+
+```jsx
+const { setUserToken } = useBillingContext();
+setUserToken('newToken');
+```
+
+### `user`
+
+The user object.
+
+```jsx
+const { user } = useBillingContext();
+console.log(user);
+```
+
+### `setUser`
+
+Function to set the user object.
+
+```jsx
+const { setUser } = useBillingContext();
+setUser({ name: 'John Doe' });
+```
+
+### `selectedPlan`
+
+The currently selected subscription plan.
+
+```jsx
+const { selectedPlan } = useBillingContext();
+console.log(selectedPlan);
+```
+
+### `setSelectedPlan`
+
+Function to set the selected subscription plan.
+
+```jsx
+const { setSelectedPlan } = useBillingContext();
+setSelectedPlan({ name: 'Pro Plan' });
+```
+
+### `plans`
+
+An array of available subscription plans.
+
+```jsx
+const { plans } = useBillingContext();
+console.log(plans);
+```
+
+### `customer`
+
+The customer object.
+
+```jsx
+const { customer } = useBillingContext();
+console.log(customer);
+```
+
+### `setCustomer`
+
+Function to set the customer object.
+
+```jsx
+const { setCustomer } = useBillingContext();
+setCustomer({ name: 'Jane Doe' });
+```
+
+### `isMonthly`
+
+Boolean indicating if the billing cycle is monthly.
+
+```jsx
+const { isMonthly } = useBillingContext();
+console.log(isMonthly);
+```
+
+### `toggleBillingCycle`
+
+Function to toggle the billing cycle between monthly and yearly.
+
+```jsx
+const { toggleBillingCycle } = useBillingContext();
+toggleBillingCycle(true); // Sets billing cycle to monthly
+```
+
+### `showUpgradeModal`
+
+Boolean indicating if the upgrade modal is visible.
+
+```jsx
+const { showUpgradeModal } = useBillingContext();
+console.log(showUpgradeModal);
+```
+
+### `setShowUpgradeModal`
+
+Function to set the visibility of the upgrade modal.
+
+```jsx
+const { setShowUpgradeModal } = useBillingContext();
+setShowUpgradeModal(true);
+```
+
+### `showFreeTrialButton`
+
+Boolean indicating if the free trial button is visible.
+
+```jsx
+const { showFreeTrialButton } = useBillingContext();
+console.log(showFreeTrialButton);
+```
+
+### `setShowFreeTrialButton`
+
+Function to set the visibility of the free trial button.
+
+```jsx
+const { setShowFreeTrialButton } = useBillingContext();
+setShowFreeTrialButton(true);
+```
+
+### `isBillingModalOpen`
+
+Boolean indicating if the billing modal is open.
+
+```jsx
+const { isBillingModalOpen } = useBillingContext();
+console.log(isBillingModalOpen);
+```
+
+### `setIsBillingModalOpen`
+
+Function to set the visibility of the billing modal.
+
+```jsx
+const { setIsBillingModalOpen } = useBillingContext();
+setIsBillingModalOpen(true);
+```
+
+### `showContactModal`
+
+Boolean indicating if the contact modal is visible.
+
+```jsx
+const { showContactModal } = useBillingContext();
+console.log(showContactModal);
+```
+
+### `setShowContactModal`
+
+Function to set the visibility of the contact modal.
+
+```jsx
+const { setShowContactModal } = useBillingContext();
+setShowContactModal(true);
+```
+
+### `showSuccessModal`
+
+Boolean indicating if the success modal is visible.
+
+```jsx
+const { showSuccessModal } = useBillingContext();
+console.log(showSuccessModal);
+```
+
+### `setShowSuccessModal`
+
+Function to set the visibility of the success modal.
+
+```jsx
+const { setShowSuccessModal } = useBillingContext();
+setShowSuccessModal(true);
+```
+
+### `showWelcomeModal`
+
+Boolean indicating if the welcome modal is visible.
+
+```jsx
+const { showWelcomeModal } = useBillingContext();
+console.log(showWelcomeModal);
+```
+
+### `setShowWelcomeModal`
+
+Function to set the visibility of the welcome modal.
+
+```jsx
+const { setShowWelcomeModal } = useBillingContext();
+setShowWelcomeModal(true);
+```
+
+### `handleSelectPlan`
+
+Function to handle plan selection.
+
+```jsx
+const { handleSelectPlan } = useBillingContext();
+handleSelectPlan(selectedPlan);
+```
+
+### `handleContactUs`
+
+Function to handle contact us action.
+
+```jsx
+const { handleContactUs } = useBillingContext();
+handleContactUs();
+```
+
+### `handleSubmitContactUsForm`
+
+Function to handle contact us form submission.
+
+```jsx
+const { handleSubmitContactUsForm } = useBillingContext();
+handleSubmitContactUsForm('123456789');
+```
+
+### `closeSuccessModal`
+
+Function to close the success modal.
+
+```jsx
+const { closeSuccessModal } = useBillingContext();
+closeSuccessModal();
+```
+
+### `closeContactModal`
+
+Function to close the contact modal.
+
+```jsx
+const { closeContactModal } = useBillingContext();
+closeContactModal();
+```
+
+### `closeUpgradeModal`
+
+Function to close the upgrade modal.
+
+```jsx
+const { closeUpgradeModal } = useBillingContext();
+closeUpgradeModal();
+```
+
+### `closeBillingModal`
+
+Function to close the billing modal.
+
+```jsx
+const { closeBillingModal } = useBillingContext();
+closeBillingModal();
+```
+
+### `closeEntitlementUsageLimitModal`
+
+Function to close the entitlement usage limit modal.
+
+```jsx
+const { closeEntitlementUsageLimitModal } = useBillingContext();
+closeEntitlementUsageLimitModal();
+```
+
+### `handleUpgrade`
+
+Function to handle the upgrade action.
+
+```jsx
+const { handleUpgrade } = useBillingContext();
+handleUpgrade();
+```
+
+### `handleSuccess`
+
+Function to handle success action after subscription.
+
+```jsx
+const { handleSuccess } = useBillingContext();
+handleSuccess(subscription);
+```
+
+### `handleTrial`
+
+Function to handle starting a trial subscription.
+
+```jsx
+const { handleTrial } = useBillingContext();
+handleTrial('planCode');
+```
+
+### `subscription`
+
+The current subscription object.
+
+```jsx
+const { subscription } = useBillingContext();
+console.log(subscription);
+```
+
+### `setSubscription`
+
+Function to set the current subscription object.
+
+```jsx
+const { setSubscription } = useBillingContext();
+setSubscription(newSubscription);
+```
+
+### `showEntitlementLimitModal`
+
+Boolean indicating if the entitlement limit modal is visible.
+
+```jsx
+const { showEntitlementLimitModal } = useBillingContext();
+console.log(showEntitlementLimitModal);
+```
+
+### `setShowEntitlementLimitModal`
+
+Function to set the visibility of the entitlement limit modal.
+
+```jsx
+const { setShowEntitlementLimitModal } = useBillingContext();
+setShowEntitlementLimitModal(true);
+```
+
+## Dependencies
+
+This hook depends on the following:
+
+- A Config object with `BILLING_API_URL` defined
+- `BILLING_CYCLES` and `ENTERPRISE_PLAN_NAME` constants from a types file
+
+Ensure these dependencies are properly set up in your project for the hook to function correctly.
+
+Additionally, you need to add the billing reducer to the global reducer. Here is a generic example:
+
+### Setting Up the Global Reducer
+
+```javascript
+import { combineReducers } from 'redux';
+import billingReducer from './billing/billing.slice';
+// other reducers
+// example: import authReducer from './auth/auth.slice';
+// example: import chatReducer from './chat/chat.slice';
+
+const rootReducer = combineReducers({
+  billing: billingReducer,
+  // other reducers
+  // example: auth: authReducer,
+  // example: chat: chatReducer,
+});
+
+export default rootReducer;
+```
+
+Make sure to properly integrate the billing reducer into your Redux setup to manage billing-related state in your application.

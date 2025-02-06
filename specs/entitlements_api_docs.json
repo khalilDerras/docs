@@ -1,0 +1,764 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Entitlement API",
+        "version": "1.0.0",
+        "description": "API for managing entitlements and plan entitlement quotas."
+    },
+    "servers": [
+        {
+            "url": "https://dev-entitlements-api.spectertech.ai/api/v1",
+            "description": "Production server"
+        }
+    ],
+    "paths": {
+      "/api/v1/health-check": {
+        "get": {
+          "operationId": "AppController_healthCheck",
+          "summary": "Check the health status of the service",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Service is healthy",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/entitlements": {
+      "post": {
+        "operationId": "EntitlementController_create",
+        "summary": "Create a new entitlement",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEntitlementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The entitlement has been successfully created."
+          },
+          "400": {
+            "description": "Bad Request."
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ]
+      },
+      "get": {
+        "operationId": "EntitlementController_findAll",
+        "summary": "Get all entitlements",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all entitlements"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ]
+      }
+    },
+    "/api/v1/entitlements/{id}": {
+      "get": {
+        "operationId": "EntitlementController_findOne",
+        "summary": "Get a single entitlement by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Entitlement ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the specified entitlement"
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ]
+      },
+      "patch": {
+        "operationId": "EntitlementController_update",
+        "summary": "Update an entitlement",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Entitlement ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEntitlementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entitlement updated successfully"
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ]
+      },
+      "delete": {
+        "operationId": "EntitlementController_remove",
+        "summary": "Delete an entitlement",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Entitlement ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entitlement deleted successfully"
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ]
+      }
+    },
+    "/api/v1/entitlements/by-code/{code}": {
+      "get": {
+        "operationId": "EntitlementController_findByCode",
+        "summary": "Find entitlement by code",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "description": "Entitlement code",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The entitlement has been found"
+          },
+          "404": {
+            "description": "Entitlement not found"
+          }
+        },
+        "tags": [
+          "Entitlements"
+        ]
+      }
+    },
+    "/api/v1/plan-entitlement-quota": {
+      "post": {
+        "operationId": "PlanEntitlementQuotaController_create",
+        "summary": "Create a new plan entitlement quota",
+        "description": "Creates a new quota for a specific plan and entitlement combination",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlanEntitlementQuotaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The plan entitlement quota has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanEntitlementQuota"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input or quota already exists."
+          },
+          "404": {
+            "description": "Not Found - Plan or entitlement not found."
+          }
+        },
+        "tags": [
+          "Plan Entitlement Quotas"
+        ]
+      },
+      "get": {
+        "operationId": "PlanEntitlementQuotaController_findAll",
+        "summary": "Get all plan entitlement quotas",
+        "description": "Retrieves all plan entitlement quotas with their associated entitlements",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all plan entitlement quotas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanEntitlementQuota"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Plan Entitlement Quotas"
+        ]
+      }
+    },
+    "/api/v1/plan-entitlement-quota/plan/{planId}/entitlement/{entitlementCode}": {
+      "get": {
+        "operationId": "PlanEntitlementQuotaController_getPlanEntitlementQuota",
+        "summary": "Get plan entitlement quotas by plan ID and optional entitlement code",
+        "description": "Retrieves quotas for a specific plan, optionally filtered by entitlement code",
+        "parameters": [
+          {
+            "name": "planId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the plan",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entitlementCode",
+            "required": false,
+            "in": "path",
+            "description": "Code of the entitlement (optional)",
+            "example": "storage_quota",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the plan entitlement quota(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanEntitlementQuota"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Plan Entitlement Quotas"
+        ]
+      }
+    },
+    "/api/v1/plan-entitlement-quota/{id}": {
+      "get": {
+        "operationId": "PlanEntitlementQuotaController_findOne",
+        "summary": "Get a specific plan entitlement quota",
+        "description": "Retrieves a specific plan entitlement quota by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the plan entitlement quota",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the plan entitlement quota",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanEntitlementQuota"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan entitlement quota not found"
+          }
+        },
+        "tags": [
+          "Plan Entitlement Quotas"
+        ]
+      },
+      "patch": {
+        "operationId": "PlanEntitlementQuotaController_update",
+        "summary": "Update a plan entitlement quota",
+        "description": "Updates an existing plan entitlement quota with new values",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the plan entitlement quota to update",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePlanEntitlementQuotaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the plan entitlement quota",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanEntitlementQuota"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input"
+          },
+          "404": {
+            "description": "Plan entitlement quota not found"
+          }
+        },
+        "tags": [
+          "Plan Entitlement Quotas"
+        ]
+      },
+      "delete": {
+        "operationId": "PlanEntitlementQuotaController_remove",
+        "summary": "Delete a plan entitlement quota",
+        "description": "Removes a plan entitlement quota and its associated data",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the plan entitlement quota to delete",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the plan entitlement quota"
+          },
+          "404": {
+            "description": "Plan entitlement quota not found"
+          },
+          "409": {
+            "description": "Conflict - Cannot delete quota with existing usage records"
+          }
+        },
+        "tags": [
+          "Plan Entitlement Quotas"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/initialize": {
+      "post": {
+        "operationId": "SubEntitlementController_initializeFromPlan",
+        "summary": "Initialize subscription entitlements from plan",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Entitlements initialized successfully."
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/{subscriptionId}/{entitlementCode}/usage": {
+      "put": {
+        "operationId": "SubEntitlementController_reportUsage",
+        "summary": "Report usage for an entitlement",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "path",
+            "description": "Code of the entitlement",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/{subscriptionId}/{entitlementCode}": {
+      "get": {
+        "operationId": "SubEntitlementController_getUsageInfo",
+        "summary": "Get usage info for an entitlement",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "path",
+            "description": "Code of the entitlement",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/{subscriptionId}": {
+      "get": {
+        "operationId": "SubEntitlementController_getSubscriptionEntitlements",
+        "summary": "Get all entitlements for a subscription",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/{subscriptionId}/{entitlementCode}/quota": {
+      "put": {
+        "operationId": "SubEntitlementController_updateQuota",
+        "summary": "Update quota for an entitlement",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "path",
+            "description": "Code of the entitlement",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/{subscriptionId}/{entitlementCode}/status": {
+      "get": {
+        "operationId": "SubEntitlementController_getStatus",
+        "summary": "Get status of an entitlement",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "path",
+            "description": "Code of the entitlement",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the current status of the entitlement",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "type": "number"
+                    },
+                    "quota": {
+                      "type": "number"
+                    },
+                    "isUnlimited": {
+                      "type": "boolean"
+                    },
+                    "remainingQuota": {
+                      "type": "number"
+                    },
+                    "percentageUsed": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement": {
+      "post": {
+        "operationId": "SubEntitlementController_createSubscriptionEntitlement",
+        "summary": "Create a subscription entitlement",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Subscription entitlement created successfully."
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    }
+    },
+    "components": {
+      "schemas": {
+      "CreateEntitlementDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the entitlement",
+            "example": "Premium Access"
+          },
+          "code": {
+            "type": "string",
+            "description": "The unique code for the entitlement",
+            "example": "PREMIUM_ACCESS"
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the entitlement",
+            "example": "Grants access to premium features"
+          },
+          "reportable": {
+            "type": "boolean",
+            "description": "Whether the entitlement is reportable",
+            "example": true,
+            "default": false
+          }
+        },
+        "required": [
+          "name",
+          "code"
+        ]
+      },
+      "UpdateEntitlementDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the entitlement",
+            "example": "Premium Access"
+          },
+          "code": {
+            "type": "string",
+            "description": "The unique code for the entitlement",
+            "example": "PREMIUM_ACCESS"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the entitlement",
+            "example": "Grants access to premium features"
+          },
+          "reportable": {
+            "type": "boolean",
+            "description": "Whether the entitlement is reportable",
+            "example": true,
+            "default": false
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the entitlement"
+          },
+          "defaultValue": {
+            "type": "number",
+            "description": "The default value for the entitlement"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether the entitlement is active"
+          }
+        }
+      },
+      "CreatePlanEntitlementQuotaDto": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string",
+            "description": "The unique identifier of the plan",
+            "example": "35374269-8fc3-43cd-adfd-038dac3da462"
+          },
+          "entitlement": {
+            "type": "string",
+            "description": "The unique identifier of the entitlement",
+            "example": "16d390da-222b-453f-b4fa-fd6a726309c3"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The quota limit (-1 for unlimited)",
+            "example": 10
+          }
+        },
+        "required": [
+          "planId",
+          "entitlement",
+          "quota"
+        ]
+      },
+      "PlanEntitlementQuota": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdatePlanEntitlementQuotaDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the plan entitlement quota"
+          },
+          "entitlement": {
+            "type": "string",
+            "description": "The unique identifier of the entitlement",
+            "example": "16d390da-222b-453f-b4fa-fd6a726309c3"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the plan entitlement quota"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The quota for the plan entitlement"
+          },
+          "unit": {
+            "type": "string",
+            "description": "The unit of measurement for the quota"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether the quota is active or not"
+          }
+        }
+      }
+    }
+    },
+     "x-original-swagger-version": "2.0"
+}

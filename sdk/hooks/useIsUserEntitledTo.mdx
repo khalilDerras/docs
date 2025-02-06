@@ -1,0 +1,105 @@
+---
+id: useIsUserEntitledTo
+title: useIsUserEntitledTo
+icon: react
+iconType: solid
+---
+
+
+#### Overview
+
+The `useIsUserEntitledTo` hook is a custom React hook designed to check a user's entitlement status for a specific feature or service. It provides a function to make an API call to verify entitlements, along with loading and error states.
+
+#### Usage
+
+```jsx
+const { isUserEntitledTo, loading, error } = useIsUserEntitledTo(authToken, orgId);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `isUserEntitledTo` (function): A function to check the user's entitlement status.
+- `loading` (boolean): Indicates whether an entitlement check is currently in progress.
+- `error` (string | null): Contains an error message if an error occurred during the process, otherwise null.
+
+#### isUserEntitledTo Function
+
+The `isUserEntitledTo` function is used to check the user's entitlement status for a specific feature.
+
+##### Parameters
+
+- `payload` (object, required): An object containing the entitlement details.
+  - `entitlement` (string, required): The name or identifier of the entitlement to check.
+  - `usage` (number, optional): The usage amount to check against the entitlement. Defaults to 1.
+
+##### Returns
+
+This function returns a Promise that resolves to the entitlement status response from the API.
+
+#### Example
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import useIsUserEntitledTo from './useIsUserEntitledTo';
+
+const EntitlementCheckComponent = ({ authToken }) => {
+    const { isUserEntitledTo, loading, error } = useIsUserEntitledTo(authToken, orgId);
+    const [entitlementStatus, setEntitlementStatus] = useState(null);
+
+    useEffect(() => {
+        const checkEntitlement = async () => {
+            const result = await isUserEntitledTo({ entitlement: 'premium_feature', usage: 1 });
+            setEntitlementStatus(result);
+        };
+        checkEntitlement();
+    }, []);
+
+    if (loading) return <div>Checking entitlement...</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    return (
+        <div>
+            <h2>Entitlement Status</h2>
+            {entitlementStatus && <p>Status: {JSON.stringify(entitlementStatus)}</p>}
+        </div>
+    );
+};
+
+export default EntitlementCheckComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/entitlements/status`
+- Method: POST
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': `orgId` (if provided)
+- Body: JSON string containing `entitlement` and `usage`
+
+#### Error Handling
+
+If an error occurs during the API call, the `error` state will be set to 'Failed to get User Entitlement status'. You should handle this in your component to display an appropriate error message to the user.
+
+#### Performance Considerations
+
+- The hook uses `useState` to manage its internal loading and error states.
+- The API call is made only when the `isUserEntitledTo` function is explicitly called, preventing unnecessary requests.
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+
+Ensure this dependency is properly set up in your project for the hook to function correctly.

@@ -1,0 +1,109 @@
+---
+id: useGetCustomerInvoices
+title: useGetCustomerInvoices
+icon: react
+iconType: solid
+---
+
+
+
+#### Overview
+
+The `useGetCustomerInvoices` hook is a custom React hook designed to fetch customer invoices. It handles the API call, manages loading and error states, and returns the invoice information.
+
+
+#### Usage
+
+```jsx
+const { invoices, loading, error } = useGetCustomerInvoices(authToken, orgId);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `invoices` (Array[Invoice]): An array of invoices of the user.
+- `loading` (boolean): Indicates whether the invoices are currently being fetched.
+- `error` (string | null): Contains an error message if an error occurred during fetching, otherwise null.
+
+#### Invoice Object Structure
+
+Each invoice in the `invoices` array has the following structure:
+
+```typescript
+interface Invoice {
+  id: string;
+  date: string;
+  status: string;
+  paymentStatus: string;
+  downloadLink: string | null;
+  amount: number;
+  currency: string;
+}
+```
+
+#### Example
+
+```jsx
+import React from 'react';
+import useGetCustomerInvoices from './useGetCustomerInvoices';
+import { BILLING_CYCLES } from '../types';
+
+const CustomerInvoicesComponent = ({ authToken, orgId }) => {
+  const { invoices, loading, error } = useGetCustomerInvoices(authToken, orgId);
+
+  const invoicesResp =  await invoices()
+
+  if (loading) return <div>Loading plans...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div>
+      <h2>Available Invoices</h2>
+      {invoicesResp?.map(invoice => (
+        <div key={invoice.id}>
+          <p>Date: {invoice.date}</p>
+          <p>Status: {invoice.status}</p>
+          <p>Payment Status: {invoice.paymentStatus}</p>
+          <p>Amount: {invoice.currency} {invoice.amount}</p>
+          {invoice.downloadLink && <button>Download</button>}
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+
+```jsx
+export default CustomerInvoicesComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/customers/invoices`
+- Method: GET
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': `orgId` (if provided)
+- Body: JSON string containing `invoices`
+
+#### Performance Considerations
+
+- API calls are made only once when the component mounts or when the `authToken` changes, preventing unnecessary requests.
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+- A `Invoice` type definition (imported from '@/billing-ui/types')
+
+Ensure these dependencies are properly set up in your project for the hook to function correctly.

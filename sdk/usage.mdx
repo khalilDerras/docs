@@ -1,0 +1,94 @@
+---
+title: SDK Usage Guide
+icon: wand-magic-sparkles
+iconType: solid
+---
+
+
+### Basic Usage
+<Check>
+    This guide assumes you have already [setup](/sdk/setup) the sdk in your application.
+</Check>
+
+Here's a basic example of how to use the `BillingProvider` and `useBillingContext` in your application:
+
+```jsx
+import React from 'react';
+import { BillingProvider, useBillingContext } from '@locai1/billing-react-sdk';
+
+const App = () => (
+  <BillingProvider authUser={yourAuthUser} authToken={yourAuthToken}>
+    <YourComponent />
+  </BillingProvider>
+);
+
+const YourComponent = () => {
+  const { selectedPlan, setSelectedPlan, subscription, setSubscription } = useBillingContext();
+
+  return (
+    <div>
+      <h1>Selected Plan: {selectedPlan?.name}</h1>
+      <h2>Subscription Status: {subscription?.status}</h2>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Examples of Usages
+
+
+<Tabs>
+<Tab title="Selecting a Plan">
+
+```jsx
+import React from 'react';
+import { useBillingContext } from '@locai1/billing-react-sdk';
+
+const PlanSelector = () => {
+  const { plans, selectedPlan, setSelectedPlan } = useBillingContext();
+
+  return (
+    <div>
+      <h2>Select a Plan</h2>
+      <select value={selectedPlan?.name} onChange={(e) => {
+        const plan = plans.find(p => p.name === e.target.value);
+        setSelectedPlan(plan);
+      }}>
+        {plans.map(plan => (
+          <option key={plan.name} value={plan.name}>{plan.name}</option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+export default PlanSelector;
+```
+
+</Tab>
+<Tab title="Displaying Subscription Status">
+
+
+```jsx
+import React from 'react';
+import { useBillingContext } from '@locai1/billing-react-sdk';
+
+const SubscriptionStatus = () => {
+  const { subscription } = useBillingContext();
+
+  return (
+    <div>
+      <h2>Subscription Status</h2>
+      <p>Status: {subscription?.status}</p>
+      <p>Plan: {subscription?.planName}</p>
+    </div>
+  );
+};
+
+export default SubscriptionStatus;
+```
+
+</Tab>
+</Tabs>

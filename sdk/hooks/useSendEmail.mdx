@@ -1,0 +1,109 @@
+---
+id: useSendEmail
+title: useSendEmail
+icon: react
+iconType: solid
+---
+
+#### Overview
+
+The `useSendEmail` hook is a custom React hook designed to send emails using an API endpoint. It manages the email sending process, handles loading and error states, and provides feedback on the success of the operation.
+
+#### Usage
+
+```jsx
+const { sendEmail, loading, error, success } = useSendEmail(authToken, orgId);
+```
+
+##### Parameters
+
+- `authToken` (string, required): The authentication token for API requests.
+- `orgId` (string, optional): The organization ID associated with the user.
+
+##### Returns
+
+An object with the following properties:
+
+- `sendEmail` (function): A function to send an email with the provided data.
+- `loading` (boolean): Indicates whether an email is currently being sent.
+- `error` (string | null): Contains an error message if an error occurred during the process, otherwise null.
+- `success` (boolean): Indicates whether the email was sent successfully.
+
+#### sendEmail Function
+
+The `sendEmail` function is used to initiate the email sending process.
+
+##### Parameters
+
+- `data` (SendEmailData, required): An object containing the email details.
+  - `email` (string): The recipient's email address.
+  - `subject` (string): The subject of the email.
+  - `template` (ReactNode): The React component to be rendered as the email content.
+
+##### Returns
+
+This function doesn't return a value directly, but it updates the hook's state with the result of the email sending process.
+
+#### Example
+
+```jsx
+import React from 'react';
+import useSendEmail from './useSendEmail';
+
+const EmailComponent = ({ authToken }) => {
+    const { sendEmail, loading, error, success } = useSendEmail(authToken, orgId);
+
+    const handleSendEmail = async () => {
+        const emailData = {
+            email: 'recipient@example.com',
+            subject: 'Test Email',
+            template: <div><p>This is a test email</p></div>,
+        };
+        await sendEmail(emailData);
+    };
+
+    return (
+        <div>
+            <h2>Send Email</h2>
+            <button onClick={handleSendEmail} disabled={loading}>
+                {loading ? 'Sending...' : 'Send Email'}
+            </button>
+            {error && <p>Error: {error}</p>}
+            {success && <p>Email sent successfully!</p>}
+        </div>
+    );
+};
+
+export default EmailComponent;
+```
+
+#### API Details
+
+The hook internally uses the following API endpoint:
+
+- URL: `${Config.BILLING_API_URL}/api/v1/emails/send`
+- Method: POST
+- Headers:
+  - 'Content-Type': 'application/json'
+  - 'Authorization': `Bearer ${authToken}`
+  - 'x-org-id': orgId (if provided)
+- Body: JSON string containing `to`, `subject`, and `text` (rendered HTML content)
+
+#### Error Handling
+
+If an error occurs during the API call, the `error` state will be set to the error message returned by the API or a default message. You should handle this in your component to display an appropriate error message to the user.
+
+#### Performance Considerations
+
+- The hook uses `useState` to manage its internal states (loading, error, and success).
+- The API call is made only when the `sendEmail` function is explicitly called, preventing unnecessary requests.
+- The hook uses `react-dom/server`'s `renderToStaticMarkup` to convert React components to HTML strings, which is efficient for server-side rendering of email content.
+
+#### Dependencies
+
+This hook depends on the following:
+
+- A `Config` object with `BILLING_API_URL` defined
+- `react-dom/server` for rendering React components to HTML strings
+
+Ensure these dependencies are properly set up in your project for the hook to function correctly.

@@ -1,0 +1,44 @@
+---
+title: 'Payment Flow with Stripe'
+icon: 'credit-card'
+iconType: 'solid'
+description: 'Learn how to implement the payment flow using Stripe'
+---
+import AuthenticationWarning from '/snippets/authentication-warning.mdx'
+
+<AuthenticationWarning />
+
+# Payment Flow with Stripe
+
+This guide explains how to implement the payment flow using Stripe and the Billing SDK.
+
+## Setting Up Stripe Payment
+
+<img src="/images/Payment-with-stripe.png" alt="Payment Flow" />
+
+<Steps>
+  <Step title="Client Initiates Payment Intent">
+    The client uses the <Link href="/sdk/hooks/useCreatePaymentIntent">useCreatePaymentIntent</Link> hook to initiate a payment intent, forwarding the request to the Billing API.
+  </Step>
+  <Step title="Billing API Checks Customer">
+    The Billing API checks if the customer exists in Lago. If yes, it returns the customer information; if not, it creates a new customer and returns the information.
+  </Step>
+  <Step title="Forward Customer Info to Stripe">
+    The Billing API forwards the customer information to Stripe.
+  </Step>
+  <Step title="Stripe Returns Secret">
+    If the information is valid, Stripe returns a secret which is passed back to the client UI.
+  </Step>
+  <Step title="Render Embedded Checkout Form">
+    The client UI renders the <Link href="/sdk/components/EmbeddedCheckoutForm"> EmbeddedCheckoutForm </Link> from the Billing SDK.
+  </Step>
+  <Step title="User Completes Payment">
+    The user fills in the required information. This information, along with the secret, is sent to Stripe, which then redirects the client to the success/failure page.
+  </Step>
+  <Step title="Stripe Callback to Billing API">
+    Once the flow completes, Stripe returns the payment information to the Billing API via a callback URL.
+  </Step>
+  <Step title="Update Subscription in Lago">
+    Based on the information from Stripe, the Billing API creates or updates the subscription in Lago.
+  </Step>
+</Steps>
