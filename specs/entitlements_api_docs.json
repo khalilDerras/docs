@@ -1,41 +1,41 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-        "title": "Entitlement API",
-        "version": "1.0.0",
-        "description": "API for managing entitlements and plan entitlement quotas."
-    },
-    "servers": [
-        {
-            "url": "https://dev-entitlements-api.spectertech.ai/api/v1",
-            "description": "Production server"
-        }
-    ],
-    "paths": {
-      "/api/v1/health-check": {
-        "get": {
-          "operationId": "AppController_healthCheck",
-          "summary": "Check the health status of the service",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "Service is healthy",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string"
-                  }
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/health-check": {
+      "get": {
+        "operationId": "AppController_healthCheck",
+        "summary": "Check the health status of the service",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
           }
         }
-      },
-      "/api/v1/entitlements": {
+      }
+    },
+    "/api/v1/entitlements": {
       "post": {
         "operationId": "EntitlementController_create",
         "summary": "Create a new entitlement",
-        "parameters": [],
+        "description": "Creates a new entitlement definition",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -48,10 +48,16 @@
         },
         "responses": {
           "201": {
-            "description": "The entitlement has been successfully created."
+            "description": "Entitlement created successfully"
           },
           "400": {
-            "description": "Bad Request."
+            "description": "Bad Request - Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "409": {
+            "description": "Conflict - Entitlement code already exists"
           }
         },
         "tags": [
@@ -61,10 +67,24 @@
       "get": {
         "operationId": "EntitlementController_findAll",
         "summary": "Get all entitlements",
-        "parameters": [],
+        "description": "Retrieves all entitlement definitions",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns all entitlements"
+            "description": "Successfully retrieved all entitlements"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -76,7 +96,17 @@
       "get": {
         "operationId": "EntitlementController_findOne",
         "summary": "Get a single entitlement by ID",
+        "description": "Retrieves a specific entitlement by its ID",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -89,10 +119,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the specified entitlement"
+            "description": "Successfully retrieved the entitlement"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
-            "description": "Entitlement not found"
+            "description": "Not Found - Entitlement not found"
           }
         },
         "tags": [
@@ -102,7 +135,17 @@
       "patch": {
         "operationId": "EntitlementController_update",
         "summary": "Update an entitlement",
+        "description": "Updates an existing entitlement definition",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -127,8 +170,14 @@
           "200": {
             "description": "Entitlement updated successfully"
           },
+          "400": {
+            "description": "Bad Request - Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
-            "description": "Entitlement not found"
+            "description": "Not Found - Entitlement not found"
           }
         },
         "tags": [
@@ -138,7 +187,17 @@
       "delete": {
         "operationId": "EntitlementController_remove",
         "summary": "Delete an entitlement",
+        "description": "Removes an entitlement definition",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -153,8 +212,14 @@
           "200": {
             "description": "Entitlement deleted successfully"
           },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
-            "description": "Entitlement not found"
+            "description": "Not Found - Entitlement not found"
+          },
+          "409": {
+            "description": "Conflict - Cannot delete entitlement in use"
           }
         },
         "tags": [
@@ -166,7 +231,17 @@
       "get": {
         "operationId": "EntitlementController_findByCode",
         "summary": "Find entitlement by code",
+        "description": "Retrieves a specific entitlement by its code",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "code",
             "required": true,
@@ -179,10 +254,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The entitlement has been found"
+            "description": "Successfully retrieved the entitlement"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
-            "description": "Entitlement not found"
+            "description": "Not Found - Entitlement not found"
           }
         },
         "tags": [
@@ -195,7 +273,17 @@
         "operationId": "PlanEntitlementQuotaController_create",
         "summary": "Create a new plan entitlement quota",
         "description": "Creates a new quota for a specific plan and entitlement combination",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -208,7 +296,7 @@
         },
         "responses": {
           "201": {
-            "description": "The plan entitlement quota has been successfully created.",
+            "description": "Plan entitlement quota created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -219,6 +307,9 @@
           },
           "400": {
             "description": "Bad Request - Invalid input or quota already exists."
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key."
           },
           "404": {
             "description": "Not Found - Plan or entitlement not found."
@@ -232,10 +323,20 @@
         "operationId": "PlanEntitlementQuotaController_findAll",
         "summary": "Get all plan entitlement quotas",
         "description": "Retrieves all plan entitlement quotas with their associated entitlements",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved all plan entitlement quotas",
+            "description": "Successfully retrieved all quotas",
             "content": {
               "application/json": {
                 "schema": {
@@ -246,6 +347,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key."
           }
         },
         "tags": [
@@ -259,6 +363,15 @@
         "summary": "Get plan entitlement quotas by plan ID and optional entitlement code",
         "description": "Retrieves quotas for a specific plan, optionally filtered by entitlement code",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "planId",
             "required": true,
@@ -282,14 +395,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the plan entitlement quota(s)",
+            "description": "Successfully retrieved the quotas",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlanEntitlementQuota"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanEntitlementQuota"
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key."
+          },
+          "404": {
+            "description": "Not Found - Plan not found."
           }
         },
         "tags": [
@@ -304,6 +426,15 @@
         "description": "Retrieves a specific plan entitlement quota by its ID",
         "parameters": [
           {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "id",
             "required": true,
             "in": "path",
@@ -316,7 +447,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the plan entitlement quota",
+            "description": "Successfully retrieved the quota",
             "content": {
               "application/json": {
                 "schema": {
@@ -325,8 +456,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key."
+          },
           "404": {
-            "description": "Plan entitlement quota not found"
+            "description": "Not Found - Plan entitlement quota not found"
           }
         },
         "tags": [
@@ -338,6 +472,15 @@
         "summary": "Update a plan entitlement quota",
         "description": "Updates an existing plan entitlement quota with new values",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -361,7 +504,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully updated the plan entitlement quota",
+            "description": "Successfully updated the quota",
             "content": {
               "application/json": {
                 "schema": {
@@ -371,10 +514,13 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input"
+            "description": "Bad Request - Invalid input or duplicate quota"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key."
           },
           "404": {
-            "description": "Plan entitlement quota not found"
+            "description": "Not Found - Plan entitlement quota not found"
           }
         },
         "tags": [
@@ -386,6 +532,15 @@
         "summary": "Delete a plan entitlement quota",
         "description": "Removes a plan entitlement quota and its associated data",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -399,10 +554,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully deleted the plan entitlement quota"
+            "description": "Successfully deleted the quota"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key."
           },
           "404": {
-            "description": "Plan entitlement quota not found"
+            "description": "Not Found - Plan entitlement quota not found"
           },
           "409": {
             "description": "Conflict - Cannot delete quota with existing usage records"
@@ -417,10 +575,37 @@
       "post": {
         "operationId": "SubEntitlementController_initializeFromPlan",
         "summary": "Initialize subscription entitlements from plan",
-        "parameters": [],
+        "description": "Creates entitlements for a subscription based on the plan configuration",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitializeEntitlementsDto"
+              }
+            }
+          }
+        },
         "responses": {
-          "201": {
-            "description": "Entitlements initialized successfully."
+          "200": {
+            "description": "Entitlements initialized successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Plan or subscription not found"
           }
         },
         "tags": [
@@ -428,33 +613,47 @@
         ]
       }
     },
-    "/api/v1/sub-entitlement/{subscriptionId}/{entitlementCode}/usage": {
+    "/api/v1/sub-entitlement/usage": {
       "put": {
         "operationId": "SubEntitlementController_reportUsage",
         "summary": "Report usage for an entitlement",
+        "description": "Updates the usage count for a specific entitlement",
         "parameters": [
           {
-            "name": "subscriptionId",
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
             "required": true,
-            "in": "path",
-            "description": "ID of the subscription",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "entitlementCode",
-            "required": true,
-            "in": "path",
-            "description": "Code of the entitlement",
             "schema": {
               "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportUsageDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Usage reported successfully"
+          },
+          "400": {
+            "description": "Bad Request - Invalid usage value"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "403": {
+            "description": "Forbidden - Usage exceeds quota or not reportable"
+          },
+          "404": {
+            "description": "Not Found - Entitlement or subscription not found"
           }
         },
         "tags": [
@@ -466,7 +665,17 @@
       "get": {
         "operationId": "SubEntitlementController_getUsageInfo",
         "summary": "Get usage info for an entitlement",
+        "description": "Retrieves current usage information for a specific entitlement",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "subscriptionId",
             "required": true,
@@ -488,7 +697,61 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully retrieved usage info"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Entitlement or subscription not found"
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      },
+      "delete": {
+        "operationId": "SubEntitlementController_removeEntitlement",
+        "summary": "Remove an entitlement from a subscription",
+        "description": "Deletes an entitlement from a subscription",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subscriptionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entitlementCode",
+            "required": true,
+            "in": "path",
+            "description": "Code of the entitlement",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entitlement removed successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Entitlement or subscription not found"
           }
         },
         "tags": [
@@ -500,7 +763,17 @@
       "get": {
         "operationId": "SubEntitlementController_getSubscriptionEntitlements",
         "summary": "Get all entitlements for a subscription",
+        "description": "Retrieves all entitlements associated with a subscription",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "subscriptionId",
             "required": true,
@@ -513,7 +786,13 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully retrieved subscription entitlements"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Subscription not found"
           }
         },
         "tags": [
@@ -521,33 +800,44 @@
         ]
       }
     },
-    "/api/v1/sub-entitlement/{subscriptionId}/{entitlementCode}/quota": {
+    "/api/v1/sub-entitlement/quota": {
       "put": {
         "operationId": "SubEntitlementController_updateQuota",
         "summary": "Update quota for an entitlement",
+        "description": "Updates the quota limit for a specific entitlement",
         "parameters": [
           {
-            "name": "subscriptionId",
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
             "required": true,
-            "in": "path",
-            "description": "ID of the subscription",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "entitlementCode",
-            "required": true,
-            "in": "path",
-            "description": "Code of the entitlement",
             "schema": {
               "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuotaDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Quota updated successfully"
+          },
+          "400": {
+            "description": "Bad Request - Invalid quota value"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Entitlement or subscription not found"
           }
         },
         "tags": [
@@ -559,7 +849,17 @@
       "get": {
         "operationId": "SubEntitlementController_getStatus",
         "summary": "Get status of an entitlement",
+        "description": "Retrieves detailed status information for a specific entitlement",
         "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "subscriptionId",
             "required": true,
@@ -579,6 +879,122 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved entitlement status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "type": "number"
+                    },
+                    "quota": {
+                      "type": "number"
+                    },
+                    "isUnlimited": {
+                      "type": "boolean"
+                    },
+                    "remainingQuota": {
+                      "type": "number"
+                    },
+                    "percentageUsed": {
+                      "type": "number"
+                    },
+                    "isEntitled": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Entitlement or subscription not found"
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement": {
+      "post": {
+        "operationId": "SubEntitlementController_createSubscriptionEntitlement",
+        "summary": "Create a subscription entitlement",
+        "description": "Creates a new entitlement for a subscription",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubEntitlementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription entitlement created successfully"
+          },
+          "400": {
+            "description": "Bad Request - Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Plan or entitlement not found"
+          },
+          "409": {
+            "description": "Conflict - Entitlement already exists"
+          }
+        },
+        "tags": [
+          "Subscription Entitlements"
+        ]
+      }
+    },
+    "/api/v1/sub-entitlement/entitledToUsage": {
+      "post": {
+        "operationId": "SubEntitlementController_checkStatus",
+        "summary": "Check if an entitlement is entitled to a given usage",
+        "parameters": [
+          {
+            "name": "x-admin-api-key",
+            "in": "header",
+            "description": "The API key to access the admin API",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportUsageDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Returns the current status of the entitlement",
@@ -601,6 +1017,9 @@
                     },
                     "percentageUsed": {
                       "type": "number"
+                    },
+                    "isEntitled": {
+                      "type": "boolean"
                     }
                   }
                 }
@@ -612,25 +1031,18 @@
           "Subscription Entitlements"
         ]
       }
-    },
-    "/api/v1/sub-entitlement": {
-      "post": {
-        "operationId": "SubEntitlementController_createSubscriptionEntitlement",
-        "summary": "Create a subscription entitlement",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Subscription entitlement created successfully."
-          }
-        },
-        "tags": [
-          "Subscription Entitlements"
-        ]
-      }
     }
-    },
-    "components": {
-      "schemas": {
+  },
+  "info": {
+    "title": "Entitlements API",
+    "description": "Entitlements API description",
+    "version": "0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
       "CreateEntitlementDto": {
         "type": "object",
         "properties": {
@@ -676,7 +1088,7 @@
           },
           "description": {
             "type": "string",
-            "description": "The description of the entitlement",
+            "description": "A description of the entitlement",
             "example": "Grants access to premium features"
           },
           "reportable": {
@@ -684,18 +1096,6 @@
             "description": "Whether the entitlement is reportable",
             "example": true,
             "default": false
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of the entitlement"
-          },
-          "defaultValue": {
-            "type": "number",
-            "description": "The default value for the entitlement"
-          },
-          "isActive": {
-            "type": "boolean",
-            "description": "Whether the entitlement is active"
           }
         }
       },
@@ -751,14 +1151,110 @@
           "unit": {
             "type": "string",
             "description": "The unit of measurement for the quota"
-          },
-          "isActive": {
-            "type": "boolean",
-            "description": "Whether the quota is active or not"
           }
         }
+      },
+      "InitializeEntitlementsDto": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "description": "The ID of the subscription to initialize",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "planId": {
+            "type": "string",
+            "description": "The ID of the plan to initialize from",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          }
+        },
+        "required": [
+          "subscriptionId",
+          "planId"
+        ]
+      },
+      "ReportUsageDto": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "description": "The ID of the subscription",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "entitlementCode": {
+            "type": "string",
+            "description": "The code of the entitlement",
+            "example": "storage_quota"
+          },
+          "usage": {
+            "type": "number",
+            "description": "The usage amount to report (defaults to 1 if not provided)",
+            "example": 100,
+            "default": 1
+          }
+        },
+        "required": [
+          "subscriptionId",
+          "entitlementCode"
+        ]
+      },
+      "UpdateQuotaDto": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "description": "The subscription ID",
+            "example": "sub_123"
+          },
+          "entitlementCode": {
+            "type": "string",
+            "description": "The entitlement code",
+            "example": "ent_doc"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The new quota value (-1 for unlimited)",
+            "example": 1000,
+            "minimum": -1
+          }
+        },
+        "required": [
+          "subscriptionId",
+          "entitlementCode",
+          "quota"
+        ]
+      },
+      "CreateSubEntitlementDto": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "description": "The ID of the subscription",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "planId": {
+            "type": "string",
+            "description": "The ID of the plan",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "entitlementCode": {
+            "type": "string",
+            "description": "The code of the entitlement",
+            "example": "storage_quota"
+          },
+          "quota": {
+            "type": "number",
+            "description": "The quota value (-1 for unlimited)",
+            "example": 1000
+          }
+        },
+        "required": [
+          "subscriptionId",
+          "planId",
+          "entitlementCode",
+          "quota"
+        ]
       }
     }
-    },
-     "x-original-swagger-version": "2.0"
+  }
 }

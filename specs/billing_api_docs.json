@@ -1,16 +1,5 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Notifications API",
-    "description": "Notification service for sending email, sms and push notifications",
-    "contact": {},
-    "version": "1.0"
-  },
-  "servers": [
-    {
-      "url": "https://dev-billing-api.iqraa.ai/"
-    }
-  ],
+  "openapi": "3.0.0",
   "paths": {
     "/api/v1/health-check": {
       "get": {
@@ -35,7 +24,7 @@
       "post": {
         "operationId": "NotificationConfigController_create",
         "summary": "Create a new notification config",
-        "description": "Create a new notification config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "description": "Create a new notification config with the provided details. Note: This endpoint is restricted for internal use only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -59,7 +48,7 @@
         },
         "responses": {
           "201": {
-            "description": "The notification config has been successfully created",
+            "description": "Notification config created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -67,6 +56,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Invalid notification config data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -75,7 +70,7 @@
       },
       "get": {
         "operationId": "NotificationConfigController_findAll",
-        "summary": "Get all NotificationConfigs",
+        "summary": "Get all notification configs",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -89,7 +84,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns all available plans",
+            "description": "Returns all notification configs",
             "content": {
               "application/json": {
                 "schema": {
@@ -100,6 +95,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -110,7 +108,7 @@
     "/api/v1/notification-configs/{id}": {
       "get": {
         "operationId": "NotificationConfigController_findOne",
-        "summary": "Get the NotificationConfig by ID",
+        "summary": "Get notification config by ID",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -125,8 +123,8 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "The id of the notification config",
-            "example": "notification_config_id",
+            "description": "The ID of the notification config",
+            "example": "notification_config_123",
             "schema": {
               "type": "string"
             }
@@ -134,7 +132,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the NotificationConfig",
+            "description": "Returns the notification config",
             "content": {
               "application/json": {
                 "schema": {
@@ -143,8 +141,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
-            "description": "NotificationConfig not found"
+            "description": "Not Found - Notification config not found"
           }
         },
         "tags": [
@@ -153,8 +154,8 @@
       },
       "put": {
         "operationId": "NotificationConfigController_update",
-        "summary": "Update a existing notification config",
-        "description": "Updates a notification config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "summary": "Update notification config",
+        "description": "Updates a notification config with the provided details. Note: This endpoint is restricted for internal use only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -169,6 +170,8 @@
             "name": "id",
             "required": true,
             "in": "path",
+            "description": "The ID of the notification config",
+            "example": "notification_config_123",
             "schema": {
               "type": "string"
             }
@@ -186,7 +189,7 @@
         },
         "responses": {
           "200": {
-            "description": "The notification config has been successfully updated",
+            "description": "Notification config updated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -194,6 +197,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Invalid notification config data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Notification config not found"
           }
         },
         "tags": [
@@ -202,7 +214,7 @@
       },
       "delete": {
         "operationId": "NotificationConfigController_remove",
-        "summary": "Delete the NotificationConfig by ID",
+        "summary": "Delete notification config",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -217,8 +229,8 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "The id of the notification config",
-            "example": "notification_config_id",
+            "description": "The ID of the notification config",
+            "example": "notification_config_123",
             "schema": {
               "type": "string"
             }
@@ -226,17 +238,13 @@
         ],
         "responses": {
           "200": {
-            "description": "NotificationConfig deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateNotificationConfigDto"
-                }
-              }
-            }
+            "description": "Notification config deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
-            "description": "NotificationConfig not found"
+            "description": "Not Found - Notification config not found"
           }
         },
         "tags": [
@@ -264,7 +272,13 @@
             "description": "Payment intent created successfully"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - Invalid amount, currency or plan code"
+          },
+          "403": {
+            "description": "Forbidden - User not authorized to create payment intent"
+          },
+          "404": {
+            "description": "Not Found - Customer or plan not found"
           }
         },
         "tags": [
@@ -310,6 +324,9 @@
         "responses": {
           "301": {
             "description": "Redirect to payment callback return URL"
+          },
+          "400": {
+            "description": "Bad Request - Payment not completed successfully"
           }
         },
         "tags": [
@@ -342,6 +359,9 @@
           },
           "404": {
             "description": "Payment intent not found"
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to retrieve payment intent"
           }
         },
         "tags": [
@@ -358,13 +378,17 @@
       "get": {
         "operationId": "CustomerController_getCustomerCurrentUsage",
         "summary": "Get customer current usage",
+        "description": "Retrieves the current usage for the authenticated customer",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Customer found"
+            "description": "Current usage retrieved successfully"
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to access usage information"
           },
           "404": {
-            "description": "Customer not found"
+            "description": "Not Found - Customer subscription not found"
           }
         },
         "tags": [
@@ -381,6 +405,7 @@
       "get": {
         "operationId": "CustomerController_getCustomer",
         "summary": "Get customer by external customer ID",
+        "description": "Retrieves customer information using their external ID (org ID)",
         "parameters": [
           {
             "name": "externalCustomerId",
@@ -395,10 +420,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Customer found"
+            "description": "Customer found and retrieved successfully"
           },
           "404": {
-            "description": "Customer not found"
+            "description": "Not Found - Customer not found"
           }
         },
         "tags": [
@@ -415,6 +440,7 @@
       "post": {
         "operationId": "SubscriptionController_create",
         "summary": "Create a new subscription",
+        "description": "Creates a new subscription for a customer. Requires authentication and admin privileges if organization ID is present.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -431,7 +457,13 @@
             "description": "Subscription created successfully"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - Invalid input parameters"
+          },
+          "403": {
+            "description": "Forbidden - User not authorized to create subscription"
+          },
+          "404": {
+            "description": "Not Found - Customer not found"
           }
         },
         "tags": [
@@ -446,11 +478,12 @@
       "get": {
         "operationId": "SubscriptionController_findAll",
         "summary": "Get all subscriptions",
+        "description": "Retrieves all subscriptions in the system. Admin access only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
             "in": "header",
-            "description": "The API key to access the admin API",
+            "description": "Admin API key required for authentication",
             "required": true,
             "schema": {
               "type": "string"
@@ -459,10 +492,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns all subscriptions"
+            "description": "List of all subscriptions retrieved successfully"
           },
           "403": {
-            "description": "Forbidden - Only administrators can access this endpoint"
+            "description": "Forbidden - Invalid or missing admin API key"
           }
         },
         "tags": [
@@ -476,11 +509,11 @@
       },
       "patch": {
         "operationId": "SubscriptionController_update",
-        "summary": "Update a subscription for the authenticated user",
+        "summary": "Update subscription",
+        "description": "Updates an existing subscription. Requires authentication and admin privileges if organization ID is present.",
         "parameters": [],
         "requestBody": {
           "required": true,
-          "description": "The subscription details to update",
           "content": {
             "application/json": {
               "schema": {
@@ -494,7 +527,10 @@
             "description": "Subscription updated successfully"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - Invalid input parameters"
+          },
+          "403": {
+            "description": "Forbidden - User not authorized to update subscription"
           },
           "404": {
             "description": "Subscription not found"
@@ -513,14 +549,18 @@
     "/api/v1/subscriptions/current": {
       "get": {
         "operationId": "SubscriptionController_getCurrentSubscription",
-        "summary": "Get current subscription for the authenticated user",
+        "summary": "Get current subscription",
+        "description": "Retrieves the current active subscription for the authenticated user",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Returns the current subscription or an empty object if the user is not an admin"
+            "description": "Current subscription retrieved successfully"
+          },
+          "403": {
+            "description": "Forbidden - User not authorized or organization user without admin rights"
           },
           "404": {
-            "description": "Subscription not found"
+            "description": "No active subscription found"
           }
         },
         "tags": [
@@ -542,6 +582,9 @@
         "responses": {
           "200": {
             "description": "List of compatible addons"
+          },
+          "403": {
+            "description": "Forbidden - User not authorized or organization user without admin rights"
           },
           "404": {
             "description": "Subscription not found"
@@ -567,6 +610,9 @@
           "200": {
             "description": "List of subscription addons"
           },
+          "403": {
+            "description": "Forbidden - User not authorized or organization user without admin rights"
+          },
           "404": {
             "description": "Subscription not found"
           }
@@ -584,17 +630,18 @@
     "/api/v1/subscriptions/terminate": {
       "delete": {
         "operationId": "SubscriptionController_terminate",
-        "summary": "Terminate a subscription for the authenticated user",
+        "summary": "Terminate subscription",
+        "description": "Terminates the current active subscription. Requires authentication and admin privileges if organization ID is present.",
         "parameters": [],
         "responses": {
           "200": {
             "description": "Subscription terminated successfully"
           },
-          "400": {
-            "description": "Bad request"
+          "403": {
+            "description": "Forbidden - User not authorized to terminate subscription"
           },
           "404": {
-            "description": "Subscription not found"
+            "description": "No active subscription found"
           }
         },
         "tags": [
@@ -658,6 +705,9 @@
         "responses": {
           "200": {
             "description": "Seats added successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid seats number"
           },
           "403": {
             "description": "Forbidden - No organization associated"
@@ -780,7 +830,10 @@
             "description": "Usage reported successfully"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - Invalid usage data"
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to report entitlement usage"
           }
         },
         "tags": [
@@ -813,7 +866,10 @@
             "description": "Entitlement status retrieved successfully"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - Invalid entitlement data"
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to check entitlement status"
           }
         },
         "tags": [
@@ -838,14 +894,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "planId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -859,55 +907,11 @@
               }
             }
           },
-          "404": {
-            "description": "Entitlement not found"
-          }
-        },
-        "tags": [
-          "Entitlements"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/entitlements/usage-info-by-plan-code": {
-      "get": {
-        "operationId": "EntitlementController_getUsageInfoByPlanCode",
-        "summary": "Get usage and quota for a subscription and entitlement by plan code",
-        "parameters": [
-          {
-            "name": "entitlementCode",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "planCode",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved usage and quota",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsageInfoResponseDto"
-                }
-              }
-            }
+          "403": {
+            "description": "Forbidden - Not authorized to get usage info"
           },
           "404": {
-            "description": "Entitlement not found"
+            "description": "Not Found - Entitlement not found"
           }
         },
         "tags": [
@@ -923,8 +927,8 @@
     "/api/v1/billing-configs": {
       "post": {
         "operationId": "BillingConfigController_create",
-        "summary": "Create a new billing config",
-        "description": "Create a new billing config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "summary": "Create billing config",
+        "description": "Create a new billing config with the provided details. Note: This endpoint is restricted for internal use only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -948,7 +952,7 @@
         },
         "responses": {
           "201": {
-            "description": "The billing config has been successfully created",
+            "description": "Billing config created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -956,6 +960,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Billing config already exists or invalid data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -969,7 +979,7 @@
       },
       "get": {
         "operationId": "BillingConfigController_findAll",
-        "summary": "Get all BillingConfigs",
+        "summary": "Get all billing configs",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -983,7 +993,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns all available plans",
+            "description": "Returns all billing configs",
             "content": {
               "application/json": {
                 "schema": {
@@ -994,6 +1004,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -1009,7 +1022,7 @@
     "/api/v1/billing-configs/category/{category}": {
       "get": {
         "operationId": "BillingConfigController_findByCategory",
-        "summary": "Get the BillingConfig by category",
+        "summary": "Get billing config by category",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -1040,7 +1053,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the BillingConfig by category",
+            "description": "Returns the billing config",
             "content": {
               "application/json": {
                 "schema": {
@@ -1050,7 +1063,7 @@
             }
           },
           "404": {
-            "description": "BillingConfig not found"
+            "description": "Not Found - Billing config not found"
           }
         },
         "tags": [
@@ -1066,7 +1079,7 @@
     "/api/v1/billing-configs/{id}": {
       "get": {
         "operationId": "BillingConfigController_findOne",
-        "summary": "Get the BillingConfig by ID",
+        "summary": "Get billing config by ID",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -1090,7 +1103,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the BillingConfig",
+            "description": "Returns the billing config",
             "content": {
               "application/json": {
                 "schema": {
@@ -1099,8 +1112,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
-            "description": "BillingConfig not found"
+            "description": "Not Found - Billing config not found"
           }
         },
         "tags": [
@@ -1114,8 +1130,8 @@
       },
       "put": {
         "operationId": "BillingConfigController_update",
-        "summary": "Update a existing billing config",
-        "description": "Updates a billing config with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "summary": "Update billing config",
+        "description": "Updates a billing config with the provided details. Note: This endpoint is restricted for internal use only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -1147,7 +1163,7 @@
         },
         "responses": {
           "200": {
-            "description": "The billing config has been successfully updated",
+            "description": "Billing config updated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1155,6 +1171,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Invalid billing config data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Billing config not found"
           }
         },
         "tags": [
@@ -1168,7 +1193,7 @@
       },
       "delete": {
         "operationId": "BillingConfigController_remove",
-        "summary": "Delete the BillingConfig by ID",
+        "summary": "Delete billing config",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -1192,17 +1217,13 @@
         ],
         "responses": {
           "200": {
-            "description": "BillingConfig deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBillingConfigDto"
-                }
-              }
-            }
+            "description": "Billing config deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
-            "description": "BillingConfig not found"
+            "description": "Not Found - Billing config not found"
           }
         },
         "tags": [
@@ -1608,10 +1629,13 @@
             }
           },
           "400": {
-            "description": "Bad request - Invalid template data or duplicate template name"
+            "description": "Bad request - Invalid template data"
           },
           "401": {
             "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "409": {
+            "description": "Conflict - Template with same name already exists"
           }
         },
         "tags": [
@@ -1775,10 +1799,16 @@
             }
           },
           "400": {
-            "description": "Bad request - Invalid update data, duplicate template name, or invalid Content-Type"
+            "description": "Bad request - Invalid update data or invalid Content-Type"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
             "description": "Template not found"
+          },
+          "409": {
+            "description": "Conflict - Template with same name already exists"
           }
         },
         "tags": [
@@ -1960,7 +1990,13 @@
             "description": "The addon has been successfully created."
           },
           "400": {
-            "description": "Bad Request."
+            "description": "Bad Request - Invalid quota or unlimited entitlement"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Charge or subscription not found"
           }
         },
         "tags": [
@@ -1989,6 +2025,9 @@
         "responses": {
           "200": {
             "description": "Returns all addons"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -2027,6 +2066,9 @@
         "responses": {
           "200": {
             "description": "Returns the specified addon"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
             "description": "Addon not found"
@@ -2077,6 +2119,12 @@
           "200": {
             "description": "Addon updated successfully"
           },
+          "400": {
+            "description": "Bad Request - Invalid quota"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
             "description": "Addon not found"
           }
@@ -2120,6 +2168,9 @@
           },
           "400": {
             "description": "Bad Request - Cannot deactivate non-renewable addon"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
             "description": "Addon not found"
@@ -2165,7 +2216,13 @@
             "description": "Charge created successfully"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid charge data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Entitlement not found"
           }
         },
         "tags": [
@@ -2184,6 +2241,9 @@
         "responses": {
           "200": {
             "description": "Returns all charges"
+          },
+          "404": {
+            "description": "No charges found"
           }
         },
         "tags": [
@@ -2359,8 +2419,17 @@
           "200": {
             "description": "Charge updated successfully"
           },
+          "400": {
+            "description": "Bad Request - Invalid charge data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
-            "description": "Charge not found"
+            "description": "Not Found - Charge not found"
+          },
+          "409": {
+            "description": "Conflict - Charge with same code already exists"
           }
         },
         "tags": [
@@ -2399,10 +2468,13 @@
             "description": "Charge deleted successfully"
           },
           "400": {
-            "description": "Bad Request - Cannot delete charge with active addons"
+            "description": "Bad Request - Cannot delete charge with active addons or failed to delete billable metric"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           },
           "404": {
-            "description": "Charge not found"
+            "description": "Not Found - Charge not found"
           }
         },
         "tags": [
@@ -2437,6 +2509,9 @@
         "responses": {
           "200": {
             "description": "Returns all available billable metrics"
+          },
+          "404": {
+            "description": "No billable metrics found"
           }
         },
         "tags": [
@@ -2451,7 +2526,6 @@
       "post": {
         "operationId": "BillableMetricController_createBillableMetric",
         "summary": "Create new billable metric",
-        "description": "",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -2485,7 +2559,13 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid metric data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "409": {
+            "description": "Conflict - Billable metric with same code already exists"
           }
         },
         "tags": [
@@ -2547,7 +2627,6 @@
       "put": {
         "operationId": "BillableMetricController_updateBillableMetric",
         "summary": "Update billable metric",
-        "description": "",
         "parameters": [
           {
             "name": "code",
@@ -2591,7 +2670,13 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid metric data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Billable metric not found"
           }
         },
         "tags": [
@@ -2636,6 +2721,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -2645,7 +2733,7 @@
       "post": {
         "operationId": "PlansController_create",
         "summary": "Create a new plan",
-        "description": "Create a new plan with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "description": "Create a new plan with the provided details. Note: This endpoint is restricted for internal use only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -2679,7 +2767,10 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid plan data, unsupported currency, or duplicate plan code/amount"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
           }
         },
         "tags": [
@@ -2727,6 +2818,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
             "description": "Plan not found"
           }
@@ -2767,6 +2861,9 @@
           "400": {
             "description": "Bad Request - Cannot delete plan with active subscriptions"
           },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
           "404": {
             "description": "Plan not found"
           }
@@ -2780,7 +2877,7 @@
       "post": {
         "operationId": "PlansController_addEntitlementToPlan",
         "summary": "Add an entitlement to a plan",
-        "description": "Add an entitlement to a plan with the provided details.\n    \n    Note: This endpoint is restricted for internal use only.\n    ",
+        "description": "Add an entitlement to a plan with the provided details. Note: This endpoint is restricted for internal use only.",
         "parameters": [
           {
             "name": "x-admin-api-key",
@@ -2814,7 +2911,13 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid entitlement data or duplicate entitlements"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Plan not found"
           }
         },
         "tags": [
@@ -2915,16 +3018,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Add metering limit",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
-                }
-              }
-            }
-          },
           "201": {
             "description": "Added Metering Limit",
             "content": {
@@ -2934,6 +3027,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Metering limit already exists"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Customer not found"
           }
         },
         "tags": [
@@ -2971,16 +3073,6 @@
         },
         "responses": {
           "200": {
-            "description": "Updated metering limit",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "Updated Metering Limit",
             "content": {
               "application/json": {
@@ -2989,6 +3081,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Invalid metering limit data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Metering limit not found"
           }
         },
         "tags": [
@@ -3026,16 +3127,6 @@
         },
         "responses": {
           "200": {
-            "description": "Deleted metering limit",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "Deleted Metering Limit",
             "content": {
               "application/json": {
@@ -3044,6 +3135,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid admin API key"
+          },
+          "404": {
+            "description": "Not Found - Metering limit not found"
           }
         },
         "tags": [
@@ -3072,16 +3169,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Add metering limit",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
-                }
-              }
-            }
-          },
           "201": {
             "description": "Added Metering Limit",
             "content": {
@@ -3091,6 +3178,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Metering limit already exists"
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to add metering limit"
           }
         },
         "tags": [
@@ -3118,16 +3211,6 @@
         },
         "responses": {
           "200": {
-            "description": "Update metering limit",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddMeteringLimitResDto"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "Updated Metering Limit",
             "content": {
               "application/json": {
@@ -3136,6 +3219,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request - Invalid metering limit data"
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to update metering limit"
+          },
+          "404": {
+            "description": "Not Found - Metering limit not found"
           }
         },
         "tags": [
@@ -3149,8 +3241,47 @@
       }
     }
   },
-  
+  "info": {
+    "title": "Billing API",
+    "description": "Billing API description",
+    "version": "0.1",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "Customers",
+      "description": "Customers related endpoints"
+    },
+    {
+      "name": "Subscriptions",
+      "description": "Subscription related endpoints"
+    },
+    {
+      "name": "Plans",
+      "description": "Plans related endpoints"
+    },
+    {
+      "name": "Entitlements",
+      "description": "Entitlements related endpoints"
+    },
+    {
+      "name": "Payments",
+      "description": "Payments related endpoints"
+    },
+    {
+      "name": "Emails",
+      "description": "Email related endpoints"
+    }
+  ],
+  "servers": [],
   "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "opaque",
+        "type": "http"
+      }
+    },
     "schemas": {
       "CreateNotificationConfigDto": {
         "type": "object",
@@ -3214,7 +3345,7 @@
           "productName"
         ]
       },
-       "UpdateNotificationConfigDto": {
+      "UpdateNotificationConfigDto": {
         "type": "object",
         "properties": {
           "unit": {
@@ -3331,29 +3462,30 @@
         "properties": {
           "planCode": {
             "type": "string",
-            "description": "The code of the subscription plan",
+            "description": "The unique code identifying the subscription plan",
             "example": "PREMIUM_MONTHLY"
           },
           "isTrial": {
             "type": "boolean",
-            "description": "Indicates if the subscription is a trial",
-            "example": true,
+            "description": "Indicates if this is a trial subscription",
+            "example": false,
             "default": false
           },
           "seats": {
             "type": "number",
-            "description": "Number of seats",
-            "example": 1,
-            "nullable": true
+            "description": "Number of seats/licenses for the subscription",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 1000000
           },
           "userEmail": {
             "type": "string",
-            "description": "The email of the user",
+            "description": "Email address of the subscription owner",
             "example": "john.doe@example.com"
           },
           "userName": {
             "type": "string",
-            "description": "The name of the user",
+            "description": "Full name of the subscription owner",
             "example": "John Doe"
           }
         },
@@ -3431,11 +3563,6 @@
             "description": "The unique identifier of the subscription",
             "example": "0c7b0eb6-3411-4dd3-9e24-d2a8edbb504a"
           },
-          "planId": {
-            "type": "string",
-            "description": "The identifier of the plan associated with the subscription",
-            "example": "plan_premium"
-          },
           "customerSubscribedId": {
             "type": "string",
             "description": "The unique identifier of the customer who is subscribed (external customer id)",
@@ -3454,7 +3581,6 @@
         },
         "required": [
           "subscriptionId",
-          "planId",
           "entitlementCode",
           "usage"
         ]
@@ -3642,7 +3768,7 @@
           "invoices"
         ]
       },
-       "LineItemDto": {
+      "LineItemDto": {
         "type": "object",
         "properties": {
           "description": {
@@ -3739,6 +3865,173 @@
           "lineItems",
           "customerDetails"
         ]
+      },
+      "CreateInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The total amount for the invoice in smallest currency unit (e.g., cents)",
+            "example": 9999,
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency code in ISO 4217 format",
+            "example": "USD",
+            "examples": [
+              "USD",
+              "EUR",
+              "GBP",
+              "AED"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "A clear description of what this invoice is for",
+            "example": "Monthly Premium Plan Subscription - January 2024"
+          },
+          "planCode": {
+            "type": "string",
+            "description": "The unique identifier of the plan being billed",
+            "example": "PREMIUM_MONTHLY"
+          },
+          "planName": {
+            "type": "string",
+            "description": "The display name of the plan being billed",
+            "example": "Premium Monthly Plan"
+          },
+          "templateId": {
+            "type": "string",
+            "description": "ID of the invoice template to use. If not provided, default template will be used",
+            "example": "template-123"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the invoice",
+            "enum": [
+              "DRAFT",
+              "FINALIZED",
+              "PAYMENT_FAILED",
+              "PAID",
+              "VOID"
+            ],
+            "example": "DRAFT",
+            "default": "DRAFT"
+          },
+          "components": {
+            "description": "Custom invoice components including line items and customer details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceComponentsDto"
+              }
+            ]
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The start date of the billing period",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "renewalDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The next renewal date for recurring invoices",
+            "example": "2024-02-01T00:00:00.000Z"
+          },
+          "paymentTerms": {
+            "type": "number",
+            "description": "Number of days until payment is due",
+            "example": 30,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "amount",
+          "currency",
+          "description"
+        ]
+      },
+      "UpdateInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The total amount for the invoice in smallest currency unit (e.g., cents)",
+            "example": 9999,
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency code in ISO 4217 format",
+            "example": "USD",
+            "examples": [
+              "USD",
+              "EUR",
+              "GBP",
+              "AED"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "A clear description of what this invoice is for",
+            "example": "Monthly Premium Plan Subscription - January 2024"
+          },
+          "planCode": {
+            "type": "string",
+            "description": "The unique identifier of the plan being billed",
+            "example": "PREMIUM_MONTHLY"
+          },
+          "planName": {
+            "type": "string",
+            "description": "The display name of the plan being billed",
+            "example": "Premium Monthly Plan"
+          },
+          "templateId": {
+            "type": "string",
+            "description": "ID of the invoice template to use. If not provided, default template will be used",
+            "example": "template-123"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the invoice",
+            "enum": [
+              "DRAFT",
+              "FINALIZED",
+              "PAYMENT_FAILED",
+              "PAID",
+              "VOID"
+            ],
+            "example": "DRAFT",
+            "default": "DRAFT"
+          },
+          "components": {
+            "description": "Custom invoice components including line items and customer details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceComponentsDto"
+              }
+            ]
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The start date of the billing period",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "renewalDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The next renewal date for recurring invoices",
+            "example": "2024-02-01T00:00:00.000Z"
+          },
+          "paymentTerms": {
+            "type": "number",
+            "description": "Number of days until payment is due",
+            "example": 30,
+            "minimum": 0
+          }
+        }
       },
       "CompanyDetails": {
         "type": "object",
@@ -4599,6 +4892,5 @@
         ]
       }
     }
-  },
-  "x-original-swagger-version": "2.0"
+  }
 }
