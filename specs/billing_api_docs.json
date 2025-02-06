@@ -1,5 +1,16 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Billing API",
+    "description": "Billing API description",
+    "version": "0.1",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://dev-billing-api.iqraa.ai/"
+    }
+  ],
   "paths": {
     "/api/v1/health-check": {
       "get": {
@@ -3241,12 +3252,6 @@
       }
     }
   },
-  "info": {
-    "title": "Billing API",
-    "description": "Billing API description",
-    "version": "0.1",
-    "contact": {}
-  },
   "tags": [
     {
       "name": "Customers",
@@ -3273,7 +3278,6 @@
       "description": "Email related endpoints"
     }
   ],
-  "servers": [],
   "components": {
     "securitySchemes": {
       "bearer": {
