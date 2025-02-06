@@ -63,12 +63,12 @@
     {
       "name": "Billing API Reference",
       "url": "billing-api-reference",
-      "openapi": "/specs/billing_api_docs.json"
+      "openapi": "./specs/billing_api_docs.json"
     },
     {
       "name": "Entitlements API Reference",
       "url": "entitlements-api-reference",
-      "openapi": "/specs/entitlements_api_docs.json"
+      "openapi": "./specs/entitlements_api_docs.json"
     }
   ],
   "navigation": [

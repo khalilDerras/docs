@@ -2917,7 +2917,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AddEntitlementDtoEntry"
+                  }
                 }
               }
             }
@@ -3884,12 +3887,7 @@
             "type": "string",
             "description": "The currency code in ISO 4217 format",
             "example": "USD",
-            "examples": [
-              "USD",
-              "EUR",
-              "GBP",
-              "AED"
-            ]
+            "enum": ["USD", "EUR", "GBP", "AED"]
           },
           "description": {
             "type": "string",
@@ -3970,12 +3968,7 @@
             "type": "string",
             "description": "The currency code in ISO 4217 format",
             "example": "USD",
-            "examples": [
-              "USD",
-              "EUR",
-              "GBP",
-              "AED"
-            ]
+            "enum": ["USD", "EUR", "GBP", "AED"]
           },
           "description": {
             "type": "string",
