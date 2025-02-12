@@ -412,7 +412,7 @@
         "summary": "Get all plans",
         "parameters": [
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": false,
             "in": "header",
             "description": "Language code for the requested translation",
@@ -511,7 +511,7 @@
             }
           },
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": false,
             "in": "header",
             "description": "Language code for the requested translation",
@@ -950,7 +950,7 @@
         "description": "Retrieve all invoices for the authenticated customer.",
         "parameters": [
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": true,
             "in": "header",
             "description": "Language for invoice fields",
@@ -1053,7 +1053,7 @@
             }
           },
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": true,
             "in": "header",
             "description": "Language for the PDF",
@@ -1111,7 +1111,7 @@
             }
           },
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": true,
             "in": "header",
             "description": "Language for invoice fields",
@@ -1577,7 +1577,7 @@
             }
           },
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": true,
             "in": "header",
             "description": "Language for the PDF preview",
@@ -2159,7 +2159,7 @@
         "summary": "Get All Billable Metrics",
         "parameters": [
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": false,
             "in": "header",
             "description": "Language code for the requested translation",
@@ -2260,7 +2260,7 @@
             }
           },
           {
-            "name": "accept-language",
+            "name": "X-Preferred-Language",
             "required": false,
             "in": "header",
             "description": "Language code for the requested translation",
