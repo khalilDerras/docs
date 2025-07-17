@@ -1,24 +1,27 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Billing/Payment Docs",
+  "name": "Locai Billing Service Docs",
   "logo": {
-    "dark": "/logo/locai-light-logo.svg",
-    "light": "/logo/locai-logo.svg"
+    "dark": "/logo/ai71-logo-dark.svg",
+    "light": "/logo/ai71-logo.svg"
   },
   "favicon": "/images/favicon.png",
+  "font": {
+    "family": "Darker Grotesque"
+  },
   "metadata": {
-    "og:title": "Billing/Payment Docs",
+    "og:title": "Locai Billing Service Docs",
     "og:image": "/images/favicon.png",
     "og:description": "Docs for Billing Service related modules",
-    "og:logo": "/logo/locai-logo.svg"
+    "og:logo": "/logo/ai71-logo.svg"
   },
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#2392eb",
+    "light": "#3295e7",
+    "dark": "#1b8ae4",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#2392eb",
+      "to": "#1b8ae4"
     }
   },
   "theme": "prism",
@@ -49,7 +52,7 @@
   },
   "tabs": [
     {
-      "name": "Features",
+      "name": "Introduction",
       "url": "/"
     },
     {
@@ -73,9 +76,7 @@
   ],
   "navigation": [
     {
-      "group": "Getting Started",
-      "icon": "rocket",
-      "iconType": "solid",
+      "group": "",
       "pages": [
         "introduction"
       ]
